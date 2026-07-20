@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+
+echo "=== Pre-commit checks ==="
+
+# Detect OS for correct gradlew
+if [ "$OSTYPE" = "msys" ] || [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "win32" ]; then
+    GRADLEW=./gradlew.bat
+else
+    GRADLEW=./gradlew
+fi
+
+# 1. Gradle config validation (fast)
+echo ""
+echo "--- [1/3] Checking Gradle config ---"
+$GRADLEW --version --quiet
+
+# 2. Android lint
+echo ""
+echo "--- [2/3] Running Android lint ---"
+$GRADLEW lintDebug --quiet
+
+# 3. Unit tests
+echo ""
+echo "--- [3/3] Running unit tests ---"
+$GRADLEW testDebugUnitTest --quiet
+
+echo ""
+echo "=== All checks passed ==="
