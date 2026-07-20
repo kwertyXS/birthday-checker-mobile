@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build APK and create draft release
@@ -33,7 +36,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Create draft release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: build-${{ github.run_number }}
           name: Build ${{ github.run_number }}
