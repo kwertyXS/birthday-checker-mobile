@@ -18,6 +18,10 @@ class AuthInterceptor @Inject constructor(
         } else {
             chain.request()
         }
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+        if (response.code() == 401) {
+            tokenManager.clear()
+        }
+        return response
     }
 }

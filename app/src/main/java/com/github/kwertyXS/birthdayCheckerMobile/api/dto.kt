@@ -22,12 +22,22 @@ data class ContactRequest(
 
 data class RefreshTokenResponse(
     @SerializedName("refresh_token")
-    val refreshToken: String,
+    val refreshToken: String = "",
+    @SerializedName("access_token")
+    val accessToken: String? = null,
 )
 
 data class AccessTokenResponse(
     @SerializedName("access_token")
     val accessToken: String,
+)
+
+// ─── Contact Response ─────────────────────────────────────────────────────────
+
+data class ContactResponse(
+    val name: String = "",
+    val phone: String = "",
+    val birthday: String = "",
 )
 
 // ─── Error ────────────────────────────────────────────────────────────────────

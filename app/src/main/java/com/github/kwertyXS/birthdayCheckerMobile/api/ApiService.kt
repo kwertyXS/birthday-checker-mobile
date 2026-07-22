@@ -19,5 +19,5 @@ interface ApiService {
     suspend fun addContact(@Body body: ContactRequest): Unit
 
     @GET("/api/v1/contacts")
-    suspend fun getContacts(): List<Any>
+    suspend fun getContacts(): List<ContactResponse>
 }

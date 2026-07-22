@@ -11,16 +11,24 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun login(phone: String): Result<RefreshTokenResponse> = runCatching {
         val response = api.login(LoginRequest(phone))
         tokenManager.saveRefreshToken(response.refreshToken)
-        val access = api.refreshToken(response.refreshToken)
-        tokenManager.saveAccessToken(access.accessToken)
+        if (response.accessToken != null) {
+            tokenManager.saveAccessToken(response.accessToken)
+        } else {
+            val access = api.refreshToken(response.refreshToken)
+            tokenManager.saveAccessToken(access.accessToken)
+        }
         response
     }
 
     override suspend fun register(phone: String, birthday: String): Result<RefreshTokenResponse> = runCatching {
         val response = api.register(RegistrationRequest(phone, birthday))
         tokenManager.saveRefreshToken(response.refreshToken)
-        val access = api.refreshToken(response.refreshToken)
-        tokenManager.saveAccessToken(access.accessToken)
+        if (response.accessToken != null) {
+            tokenManager.saveAccessToken(response.accessToken)
+        } else {
+            val access = api.refreshToken(response.refreshToken)
+            tokenManager.saveAccessToken(access.accessToken)
+        }
         response
     }
 
@@ -34,7 +42,7 @@ class ApiRepositoryImpl @Inject constructor(
         api.addContact(ContactRequest(phone, name))
     }
 
-    override suspend fun getContacts(): Result<List<Any>> = runCatching {
+    override suspend fun getContacts(): Result<List<ContactResponse>> = runCatching {
         api.getContacts()
     }
 }

@@ -8,12 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.kwertyXS.birthdayCheckerMobile.MainScaffold
 import com.github.kwertyXS.birthdayCheckerMobile.models.AuthModel
+import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
 
 @Composable
 fun MainGraph() {
     val navController = rememberNavController()
     val authModel: AuthModel = hiltViewModel()
+    val contactsModel: ContactsModel = hiltViewModel()
     val startDestination = remember { if (authModel.isLoggedIn()) "main" else "auth" }
 
     NavHost(
@@ -24,6 +26,7 @@ fun MainGraph() {
 
         composable(route = "main") {
             MainScaffold(
+                contactsModel = contactsModel,
                 onLogout = {
                     authModel.onEvent(AuthEvent.Logout)
                     navController.navigate("auth") {

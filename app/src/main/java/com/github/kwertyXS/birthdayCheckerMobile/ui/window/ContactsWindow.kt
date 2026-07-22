@@ -30,10 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.kwertyXS.birthdayCheckerMobile.R
+import com.github.kwertyXS.birthdayCheckerMobile.models.ContactInfo
+import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
@@ -42,12 +46,9 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
 @Preview(showBackground = true)
 @Composable
-fun ContactsWindow() {
-    val sampleContacts = listOf(
-        ContactInfo("Иван Иванов", "15 марта 1997"),
-        ContactInfo("Мария Петрова", "22 июля 1995"),
-        ContactInfo("Алексей Сидоров", "3 ноября 2000"),
-    )
+fun ContactsWindow(model: ContactsModel? = null) {
+    val state = model?.state?.collectAsState()
+    val contacts = state?.value?.contacts.orEmpty()
 
     Column(
         modifier = Modifier
@@ -55,12 +56,32 @@ fun ContactsWindow() {
             .background(BeigeBackground)
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(sampleContacts) { contact ->
-                ContactCard(contact)
+        if (state?.value?.isLoading == true) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("Loading...", color = TextSecondary)
+            }
+        } else if (state?.value?.error?.isNotEmpty() == true) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(state.value.error, color = OrangeAccent)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                items(contacts) { contact ->
+                    ContactCard(contact)
+                }
             }
         }
 
@@ -87,7 +108,7 @@ fun ContactsWindow() {
             Spacer(Modifier.width(12.dp))
 
             Button(
-                onClick = { },
+                onClick = { model?.loadContacts() },
                 modifier = Modifier.size(52.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
@@ -102,11 +123,6 @@ fun ContactsWindow() {
         }
     }
 }
-
-private data class ContactInfo(
-    val fullName: String,
-    val birthday: String,
-)
 
 @Composable
 private fun ContactCard(contact: ContactInfo) {
@@ -130,7 +146,7 @@ private fun ContactCard(contact: ContactInfo) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = contact.fullName.take(1),
+                    text = (contact.fullName ?: "").take(1),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = CardWhite,
@@ -142,13 +158,13 @@ private fun ContactCard(contact: ContactInfo) {
 
             Column {
                 Text(
-                    text = contact.fullName,
+                    text = contact.fullName ?: "",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextPrimary,
                 )
                 Text(
-                    text = contact.birthday,
+                    text = contact.birthday ?: "",
                     fontSize = 14.sp,
                     color = TextSecondary,
                 )

@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.kwertyXS.birthdayCheckerMobile.graph.MainGraph
+import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeUnselected
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BirthdaycheckermobileTheme
@@ -65,6 +66,7 @@ class MainActivity : ComponentActivity() {
 @PreviewScreenSizes
 @Composable
 fun MainScaffold(
+    contactsModel: ContactsModel? = null,
     onLogout: () -> Unit = {},
 ) {
     var currentTab by rememberSaveable { mutableStateOf(AppTab.BIRTHDAYS) }
@@ -135,17 +137,21 @@ fun MainScaffold(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CurrentTabContent(currentTab, onLogout)
+            CurrentTabContent(currentTab, contactsModel, onLogout)
         }
     }
     }
 }
 
 @Composable
-private fun CurrentTabContent(tab: AppTab, onLogout: () -> Unit) {
+private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, onLogout: () -> Unit) {
     when (tab) {
         AppTab.BIRTHDAYS -> UpcomingBirthdaysWindow()
-        AppTab.CONTACTS -> ContactsWindow()
+        AppTab.CONTACTS -> {
+            if (contactsModel != null) {
+                ContactsWindow(model = contactsModel)
+            }
+        }
         AppTab.SETTINGS -> AccountSettingsWindow(onLogout = onLogout)
     }
 }
