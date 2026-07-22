@@ -1,6 +1,7 @@
 package com.github.kwertyXS.birthdayCheckerMobile.ui.window
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,7 +87,9 @@ fun AccountSettingsWindow(
             Spacer(Modifier.height(20.dp))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onLogout() },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = CardWhite),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),

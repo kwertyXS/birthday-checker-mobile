@@ -4,25 +4,39 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
@@ -30,52 +44,68 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 @Composable
 fun ContactsWindow() {
     val sampleContacts = listOf(
-        ContactInfo("Alice", "alice@example.com"),
-        ContactInfo("Bob", "bob@example.com"),
-        ContactInfo("Charlie", "charlie@example.com"),
+        ContactInfo("Иван Иванов", "15 марта 1997"),
+        ContactInfo("Мария Петрова", "22 июля 1995"),
+        ContactInfo("Алексей Сидоров", "3 ноября 2000"),
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BeigeBackground)
+            .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = "Contacts",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary,
-            )
+            items(sampleContacts) { contact ->
+                ContactCard(contact)
+            }
+        }
 
-            Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(16.dp))
 
-            Text(
-                text = "All your contacts in one place",
-                fontSize = 14.sp,
-                color = TextSecondary,
-            )
-
-            Spacer(Modifier.height(20.dp))
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            Button(
+                onClick = { },
+                modifier = Modifier.size(52.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                contentPadding = PaddingValues(0.dp),
             ) {
-                items(sampleContacts) { contact ->
-                    ContactCard(contact)
-                }
+                Icon(
+                    painter = painterResource(R.drawable.ic_add),
+                    contentDescription = "Add Contact",
+                    modifier = Modifier.size(26.dp),
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier.size(52.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                contentPadding = PaddingValues(0.dp),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_sync),
+                    contentDescription = "Sync",
+                    modifier = Modifier.size(26.dp),
+                )
             }
         }
     }
 }
 
 private data class ContactInfo(
-    val name: String,
-    val email: String,
+    val fullName: String,
+    val birthday: String,
 )
 
 @Composable
@@ -86,22 +116,43 @@ private fun ContactCard(contact: ContactInfo) {
         colors = CardDefaults.cardColors(containerColor = CardWhite),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = contact.name,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextPrimary,
-            )
-            Text(
-                text = contact.email,
-                fontSize = 14.sp,
-                color = TextSecondary,
-            )
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(OrangeAccent),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = contact.fullName.take(1),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = CardWhite,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            Spacer(Modifier.width(16.dp))
+
+            Column {
+                Text(
+                    text = contact.fullName,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextPrimary,
+                )
+                Text(
+                    text = contact.birthday,
+                    fontSize = 14.sp,
+                    color = TextSecondary,
+                )
+            }
         }
     }
 }

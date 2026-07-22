@@ -22,4 +22,5 @@ sealed class AuthEvent {
     object ResetSubmitted : AuthEvent()
     object ClearError : AuthEvent()
     object Reset : AuthEvent()
+    object Logout : AuthEvent()
 }

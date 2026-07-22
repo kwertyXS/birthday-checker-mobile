@@ -64,7 +64,9 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @PreviewScreenSizes
 @Composable
-fun MainScaffold() {
+fun MainScaffold(
+    onLogout: () -> Unit = {},
+) {
     var currentTab by rememberSaveable { mutableStateOf(AppTab.BIRTHDAYS) }
 
     val now = remember { Date() }
@@ -133,18 +135,18 @@ fun MainScaffold() {
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CurrentTabContent(currentTab)
+            CurrentTabContent(currentTab, onLogout)
         }
     }
     }
 }
 
 @Composable
-private fun CurrentTabContent(tab: AppTab) {
+private fun CurrentTabContent(tab: AppTab, onLogout: () -> Unit) {
     when (tab) {
         AppTab.BIRTHDAYS -> UpcomingBirthdaysWindow()
         AppTab.CONTACTS -> ContactsWindow()
-        AppTab.SETTINGS -> AccountSettingsWindow()
+        AppTab.SETTINGS -> AccountSettingsWindow(onLogout = onLogout)
     }
 }
 

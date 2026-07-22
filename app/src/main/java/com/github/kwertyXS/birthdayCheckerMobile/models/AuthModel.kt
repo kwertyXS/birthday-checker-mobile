@@ -3,6 +3,7 @@ package com.github.kwertyXS.birthdayCheckerMobile.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kwertyXS.birthdayCheckerMobile.api.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.api.TokenManager
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthModel @Inject constructor(
     private val repository: Repository,
+    private val tokenManager: TokenManager,
 ) : ViewModel() {
+    fun isLoggedIn(): Boolean = tokenManager.isLoggedIn()
     private val _state = MutableStateFlow(AuthState())
     val state: StateFlow<AuthState> = _state.asStateFlow()
 
@@ -71,6 +74,10 @@ class AuthModel @Inject constructor(
             is AuthEvent.ResetSubmitted -> _state.update { it.copy(phoneSubmitted = false, codeSubmitted = false) }
             is AuthEvent.ClearError -> _state.update { it.copy(error = "") }
             is AuthEvent.Reset -> _state.value = AuthState()
+            is AuthEvent.Logout -> {
+                tokenManager.clear()
+                _state.value = AuthState()
+            }
         }
     }
 }
