@@ -30,6 +30,9 @@ class FakeRepositoryImpl @Inject constructor() : Repository {
             listOf(
                 ContactResponse("Иван Иванов", "+7-123-456-78-90", "15 марта 1997"),
                 ContactResponse("Мария Петрова", "+7-098-765-43-21", "22 июля 1995"),
+                ContactResponse("Алексей Сидоров", "", "22 июля 1990"),
+                ContactResponse("Елена Козлова", "", "23 июля 1988"),
+                ContactResponse("Ольга Смирнова", "", "21 июля 1995"),
             )
         )
     }

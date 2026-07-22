@@ -78,6 +78,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 8.dp),
             ) {
                 items(contacts) { contact ->
                     ContactCard(contact)
