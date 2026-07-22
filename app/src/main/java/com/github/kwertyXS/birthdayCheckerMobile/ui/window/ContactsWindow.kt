@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,22 +17,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +55,18 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 fun ContactsWindow(model: ContactsModel? = null) {
     val state = model?.state?.collectAsState()
     val contacts = state?.value?.contacts.orEmpty()
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AddContactDialog(
+            onDismiss = { showDialog = false },
+            onConfirm = { name, phone ->
+                model?.addContact(name, phone) { success ->
+                    if (success) showDialog = false
+                }
+            },
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -93,7 +111,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             horizontalArrangement = Arrangement.End,
         ) {
             Button(
-                onClick = { },
+                onClick = { showDialog = true },
                 modifier = Modifier.size(52.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
@@ -123,6 +141,65 @@ fun ContactsWindow(model: ContactsModel? = null) {
             }
         }
     }
+}
+
+@Composable
+private fun AddContactDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (name: String, phone: String) -> Unit,
+) {
+    var name by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = CardWhite,
+        shape = RoundedCornerShape(16.dp),
+        title = {
+            Text(
+                "Add Contact",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = TextPrimary,
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text("Phone") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(name, phone) },
+                enabled = name.isNotBlank() && phone.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text("Add", color = CardWhite)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = TextSecondary)
+            }
+        },
+    )
 }
 
 @Composable

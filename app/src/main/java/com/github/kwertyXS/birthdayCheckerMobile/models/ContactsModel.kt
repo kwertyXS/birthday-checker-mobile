@@ -50,4 +50,18 @@ class ContactsModel @Inject constructor(
             )
         }
     }
+
+    fun addContact(name: String, phone: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            repository.addContact(phone, name).fold(
+                onSuccess = {
+                    loadContacts()
+                    onResult(true)
+                },
+                onFailure = {
+                    onResult(false)
+                },
+            )
+        }
+    }
 }
