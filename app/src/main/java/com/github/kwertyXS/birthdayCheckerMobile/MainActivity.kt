@@ -83,13 +83,13 @@ fun MainScaffold(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+                    .clip(RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp))
                     .background(OrangeAccent)
             ) {
                 Column(
                     modifier = Modifier
                         .statusBarsPadding()
-                        .padding(top = 5.dp, bottom = 20.dp, start = 24.dp, end = 24.dp)
+                        .padding(top = 5.dp, bottom = 12.dp, start = 20.dp, end = 24.dp)
                 ) {
                     Text(
                         text = "Today",
