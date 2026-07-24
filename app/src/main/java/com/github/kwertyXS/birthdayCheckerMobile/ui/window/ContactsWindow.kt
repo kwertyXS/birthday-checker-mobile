@@ -68,16 +68,15 @@ fun ContactsWindow(model: ContactsModel? = null) {
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(BeigeBackground)
-            .padding(horizontal = 20.dp, vertical = 24.dp)
+            .padding(horizontal = 20.dp)
     ) {
         if (state?.value?.isLoading == true) {
             Box(
                 modifier = Modifier
-                    .weight(1f)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
@@ -86,7 +85,6 @@ fun ContactsWindow(model: ContactsModel? = null) {
         } else if (state?.value?.error?.isNotEmpty() == true) {
             Box(
                 modifier = Modifier
-                    .weight(1f)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
@@ -94,10 +92,10 @@ fun ContactsWindow(model: ContactsModel? = null) {
             }
         } else {
             LazyColumn(
-                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp),
             ) {
+                item { Spacer(Modifier.padding(0.dp)) }
                 items(contacts) { contact ->
                     ContactCard(contact)
                 }
@@ -107,7 +105,9 @@ fun ContactsWindow(model: ContactsModel? = null) {
         Spacer(Modifier.height(16.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 20.dp),
             horizontalArrangement = Arrangement.End,
         ) {
             Button(
