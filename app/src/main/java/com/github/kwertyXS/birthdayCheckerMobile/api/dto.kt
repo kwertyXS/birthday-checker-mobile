@@ -40,6 +40,25 @@ data class ContactResponse(
     val birthday: String = "",
 )
 
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+data class UserResponse(
+    val phone: String = "",
+    val name: String? = null,
+    val nickname: String? = null,
+    @SerializedName("telegram_id")
+    val telegramId: String? = null,
+    val birthday: String? = null,
+)
+
+data class UserEditRequest(
+    val name: String? = null,
+    val nickname: String? = null,
+    @SerializedName("telegram_id")
+    val telegramId: String? = null,
+    val birthday: String? = null,
+)
+
 // ─── Error ────────────────────────────────────────────────────────────────────
 
 data class ValidationError(

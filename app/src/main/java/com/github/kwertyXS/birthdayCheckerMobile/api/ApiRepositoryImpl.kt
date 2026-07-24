@@ -38,11 +38,23 @@ class ApiRepositoryImpl @Inject constructor(
         response
     }
 
+    override suspend fun getUser(): Result<UserResponse> = runCatching {
+        api.getUser()
+    }
+
+    override suspend fun editUser(body: UserEditRequest): Result<UserResponse> = runCatching {
+        api.editUser(body)
+    }
+
     override suspend fun addContact(phone: String, name: String): Result<Unit> = runCatching {
         api.addContact(ContactRequest(phone, name))
     }
 
     override suspend fun getContacts(): Result<List<ContactResponse>> = runCatching {
         api.getContacts()
+    }
+
+    override suspend fun deleteContact(contactId: Int): Result<Unit> = runCatching {
+        api.deleteContact(contactId)
     }
 }

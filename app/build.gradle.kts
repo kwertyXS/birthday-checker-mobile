@@ -10,6 +10,7 @@ android {
     namespace = "com.github.kwertyXS.birthdayCheckerMobile"
     compileSdk = 37
 
+    buildFeatures.buildConfig = true
     defaultConfig {
         applicationId = "com.github.kwertyXS.birthdayCheckerMobile"
         minSdk = 24
@@ -27,6 +28,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("boolean", "DEBUG_MODE", "false")
+        }
+        debug {
+            buildConfigField("boolean", "DEBUG_MODE", "true")
         }
     }
     compileOptions {
@@ -76,6 +81,7 @@ dependencies {
     // 5. Сеть
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // 6. HILT ДЛЯ DI
     implementation("com.google.dagger:hilt-android:2.60.1")
