@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +81,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("Loading...", color = TextSecondary)
+                Text(stringResource(R.string.contacts_loading), color = TextSecondary)
             }
         } else if (state?.value?.error?.isNotEmpty() == true) {
             Box(
@@ -119,7 +120,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_add),
-                    contentDescription = "Add Contact",
+                    contentDescription = stringResource(R.string.contacts_add_content_description),
                     modifier = Modifier.size(26.dp),
                 )
             }
@@ -135,7 +136,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_sync),
-                    contentDescription = "Sync",
+                    contentDescription = stringResource(R.string.contacts_sync_content_description),
                     modifier = Modifier.size(26.dp),
                 )
             }
@@ -157,7 +158,7 @@ private fun AddContactDialog(
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
-                "Add Contact",
+                stringResource(R.string.contacts_dialog_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 color = TextPrimary,
@@ -168,7 +169,7 @@ private fun AddContactDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.contacts_name_label)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -177,7 +178,7 @@ private fun AddContactDialog(
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
-                    label = { Text("Phone") },
+                    label = { Text(stringResource(R.string.contacts_phone_label)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -191,12 +192,12 @@ private fun AddContactDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text("Add", color = CardWhite)
+                Text(stringResource(R.string.contacts_add_button), color = CardWhite)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = TextSecondary)
+                Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
             }
         },
     )

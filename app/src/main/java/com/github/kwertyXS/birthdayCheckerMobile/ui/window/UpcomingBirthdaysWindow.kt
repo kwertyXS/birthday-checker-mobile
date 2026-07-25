@@ -24,11 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdayGroup
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
@@ -39,7 +41,12 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
-private val tabs = listOf("Вчера", "Сегодня", "Завтра")
+@Composable
+private fun tabTitles(): List<String> = listOf(
+    stringResource(R.string.birthdays_yesterday),
+    stringResource(R.string.birthdays_today),
+    stringResource(R.string.birthdays_tomorrow),
+)
 
 @Composable
 fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: BirthdayGroup? = null, previewTab: Int = 1) {
@@ -48,6 +55,8 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
     val selectedTab = state?.value?.selectedTab ?: previewTab
     val isLoading = state?.value?.isLoading == true
     val error = state?.value?.error ?: ""
+
+    val tabs = tabTitles()
 
     Column(
         modifier = Modifier
@@ -94,7 +103,7 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("Loading...", color = TextSecondary)
+                Text(stringResource(R.string.birthdays_loading), color = TextSecondary)
             }
         } else if (error.isNotEmpty()) {
             Box(
@@ -108,7 +117,7 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("No birthdays", color = TextSecondary)
+                Text(stringResource(R.string.birthdays_empty), color = TextSecondary)
             }
         } else {
             LazyColumn(

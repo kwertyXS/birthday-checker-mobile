@@ -22,9 +22,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
@@ -63,9 +65,9 @@ fun AccountSettingsWindow(
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
-                    SettingsRow(label = "Phone", value = state?.phone ?: "")
+                    SettingsRow(label = stringResource(R.string.settings_phone), value = state?.phone ?: "")
                     HorizontalDivider()
-                    SettingsRow(label = "Date of Birth", value = state?.birthday ?: "")
+                    SettingsRow(label = stringResource(R.string.settings_birthday), value = state?.birthday ?: "")
                 }
             }
 
@@ -85,7 +87,7 @@ fun AccountSettingsWindow(
                         .padding(20.dp)
                 ) {
                     Text(
-                        text = "Logout",
+                        text = stringResource(R.string.settings_logout),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = OrangeAccent,

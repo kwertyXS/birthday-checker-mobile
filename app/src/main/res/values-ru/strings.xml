@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">birthday-checker-mobile</string>
+
+    <!-- Top bar -->
+    <string name="topbar_title">Сегодня</string>
+
+    <!-- Bottom tabs -->
+    <string name="tab_birthdays">Дни рождения</string>
+    <string name="tab_contacts">Контакты</string>
+    <string name="tab_settings">Настройки</string>
+
+    <!-- Auth – Phone -->
+    <string name="auth_phone_title">Введите телефон</string>
+    <string name="auth_phone_subtitle">Мы запомним ваши особенные дни</string>
+    <string name="auth_phone_label">Номер телефона</string>
+    <string name="auth_continue">Продолжить</string>
+
+    <!-- Auth – Verify -->
+    <string name="auth_verify_title">Подтвердите телефон</string>
+    <string name="auth_verify_subtitle">Введите код, отправленный на ваш телефон</string>
+    <string name="auth_code_label">Код</string>
+    <string name="auth_verify_button">Подтвердить</string>
+    <string name="auth_back">Назад</string>
+
+    <!-- Auth – Birthday -->
+    <string name="auth_birthday_title">Ваш день рождения</string>
+    <string name="auth_birthday_subtitle">Помогите нам запомнить ваш особенный день</string>
+    <string name="auth_birthday_label">Дата рождения</string>
+    <string name="auth_birthday_placeholder">Выберите дату</string>
+    <string name="auth_birthday_pick_content_description">Выбрать дату</string>
+    <string name="auth_ok">ОК</string>
+    <string name="auth_cancel">Отмена</string>
+
+    <!-- Contacts -->
+    <string name="contacts_loading">Загрузка…</string>
+    <string name="contacts_add_content_description">Добавить контакт</string>
+    <string name="contacts_sync_content_description">Синхронизация</string>
+    <string name="contacts_dialog_title">Добавить контакт</string>
+    <string name="contacts_name_label">Имя</string>
+    <string name="contacts_phone_label">Телефон</string>
+    <string name="contacts_add_button">Добавить</string>
+    <string name="contacts_cancel">Отмена</string>
+
+    <!-- Contacts Permission -->
+    <string name="permission_title">Доступ к контактам</string>
+    <string name="permission_description">Нам нужен доступ к вашим контактам, чтобы проверять, у кого скоро день рождения</string>
+    <string name="permission_allow">Разрешить</string>
+    <string name="permission_not_now">Не сейчас</string>
+
+    <!-- Settings -->
+    <string name="settings_phone">Телефон</string>
+    <string name="settings_birthday">Дата рождения</string>
+    <string name="settings_logout">Выйти</string>
+
+    <!-- Birthdays -->
+    <string name="birthdays_loading">Загрузка…</string>
+    <string name="birthdays_empty">Нет дней рождения</string>
+    <string name="birthdays_yesterday">Вчера</string>
+    <string name="birthdays_today">Сегодня</string>
+    <string name="birthdays_tomorrow">Завтра</string>
+</resources>

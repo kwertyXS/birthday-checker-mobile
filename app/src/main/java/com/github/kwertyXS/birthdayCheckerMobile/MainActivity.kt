@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -94,7 +96,7 @@ fun MainScaffold(
                         .padding(top = 5.dp, bottom = 12.dp, start = 20.dp, end = 24.dp)
                 ) {
                     Text(
-                        text = "Today",
+                        text = stringResource(R.string.topbar_title),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = CardWhite,
@@ -117,11 +119,11 @@ fun MainScaffold(
                         icon = {
                             Icon(
                                 painter = painterResource(tab.icon),
-                                contentDescription = tab.label,
+                                contentDescription = stringResource(tab.labelRes),
                                 modifier = Modifier.size(20.dp),
                             )
                         },
-                        label = { Text(tab.label) },
+                        label = { Text(stringResource(tab.labelRes)) },
                         selected = currentTab == tab,
                         onClick = { currentTab = tab },
                         colors = NavigationBarItemDefaults.colors(
@@ -161,10 +163,10 @@ private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthd
 }
 
 enum class AppTab(
-    val label: String,
+    @StringRes val labelRes: Int,
     val icon: Int,
 ) {
-    BIRTHDAYS("Birthdays", R.drawable.ic_time),
-    CONTACTS("Contacts", R.drawable.ic_bell),
-    SETTINGS("Settings", R.drawable.ic_sun),
+    BIRTHDAYS(R.string.tab_birthdays, R.drawable.ic_time),
+    CONTACTS(R.string.tab_contacts, R.drawable.ic_bell),
+    SETTINGS(R.string.tab_settings, R.drawable.ic_sun),
 }
