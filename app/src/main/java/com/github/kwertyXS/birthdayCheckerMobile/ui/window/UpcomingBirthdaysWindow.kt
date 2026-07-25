@@ -143,7 +143,7 @@ private fun BirthdayCard(person: ContactResponse) {
                 color = TextPrimary,
             )
             Text(
-                text = person.birthday ?: "",
+                text = person.phone,
                 fontSize = 14.sp,
                 color = OrangeAccent,
                 fontWeight = FontWeight.Medium,
@@ -154,14 +154,14 @@ private fun BirthdayCard(person: ContactResponse) {
 
 private val sampleGroup = BirthdayGroup(
     yesterday = listOf(
-        ContactResponse("Анна Иванова", "", "21 июля 1990"),
+        ContactResponse(1, "+7-901-111-22-33", "Анна Иванова"),
     ),
     today = listOf(
-        ContactResponse("Мария Петрова", "", "22 июля 1995"),
-        ContactResponse("Сергей Сидоров", "", "22 июля 1988"),
+        ContactResponse(2, "+7-902-222-33-44", "Мария Петрова"),
+        ContactResponse(3, "+7-903-333-44-55", "Сергей Сидоров"),
     ),
     tomorrow = listOf(
-        ContactResponse("Ольга Смирнова", "", "23 июля 1992"),
+        ContactResponse(4, "+7-904-444-55-66", "Ольга Смирнова"),
     ),
 )
 

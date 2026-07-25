@@ -35,9 +35,10 @@ data class AccessTokenResponse(
 // ─── Contact Response ─────────────────────────────────────────────────────────
 
 data class ContactResponse(
-    val name: String = "",
+    @SerializedName("user_id")
+    val userId: Int = 0,
     val phone: String = "",
-    val birthday: String = "",
+    val name: String? = null,
 )
 
 // ─── User ─────────────────────────────────────────────────────────────────────

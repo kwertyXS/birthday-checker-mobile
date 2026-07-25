@@ -46,24 +46,9 @@ fun AccountSettingsWindow(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+                .padding(horizontal = 20.dp, vertical = 14.dp)
         ) {
-            Text(
-                text = "Account Settings",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = "Manage your account",
-                fontSize = 14.sp,
-                color = TextSecondary,
-            )
-
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(6.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),

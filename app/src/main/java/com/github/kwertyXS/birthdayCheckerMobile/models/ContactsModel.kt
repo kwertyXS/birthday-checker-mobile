@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 data class ContactInfo(
     val fullName: String = "",
-    val birthday: String = "",
+    val phone: String = "",
 )
 
 data class ContactsState(
@@ -40,7 +40,7 @@ class ContactsModel @Inject constructor(
                 onSuccess = { contacts ->
                     _state.value = ContactsState(
                         contacts = contacts.map {
-                            ContactInfo(fullName = it.name ?: "", birthday = it.birthday ?: "")
+                            ContactInfo(fullName = it.name ?: "", phone = it.phone)
                         },
                     )
                 },

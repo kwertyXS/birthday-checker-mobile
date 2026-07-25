@@ -1,20 +1,10 @@
 package com.github.kwertyXS.birthdayCheckerMobile.api
 
-import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FakeRepositoryImpl @Inject constructor() : Repository {
-    private val russianMonths = listOf(
-        "января", "февраля", "марта", "апреля", "мая", "июня",
-        "июля", "августа", "сентября", "октября", "ноября", "декабря",
-    )
-
-    private fun Calendar.toDateString(): String {
-        return "${get(Calendar.DAY_OF_MONTH)} ${russianMonths[get(Calendar.MONTH)]} ${get(Calendar.YEAR)}"
-    }
-
     override suspend fun login(phone: String): Result<RefreshTokenResponse> {
         return if (phone.isNotEmpty() && phone.last() == '0') {
             Result.success(RefreshTokenResponse("fake_refresh_token", "fake_access_token"))
@@ -60,29 +50,25 @@ class FakeRepositoryImpl @Inject constructor() : Repository {
     }
 
     override suspend fun getContacts(): Result<List<ContactResponse>> {
-        val today = Calendar.getInstance()
-        val yesterday = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }
-        val tomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }
-
         return Result.success(
             listOf(
-                ContactResponse("Анна Соколова", "+7-901-111-22-33", today.toDateString()),
-                ContactResponse("Дмитрий Белов", "+7-902-222-33-44", today.toDateString()),
-                ContactResponse("Юлия Морозова", "", today.toDateString()),
-                ContactResponse("Михаил Волков", "+7-903-333-44-55", yesterday.toDateString()),
-                ContactResponse("Татьяна Орлова", "", yesterday.toDateString()),
-                ContactResponse("Сергей Козлов", "+7-904-444-55-66", yesterday.toDateString()),
-                ContactResponse("Ольга Новикова", "", tomorrow.toDateString()),
-                ContactResponse("Алексей Фёдоров", "+7-905-555-66-77", tomorrow.toDateString()),
-                ContactResponse("Наталья Григорьева", "+7-906-666-77-88", "15 января 1992"),
-                ContactResponse("Иван Иванов", "+7-123-456-78-90", "15 марта 1997"),
-                ContactResponse("Мария Петрова", "+7-098-765-43-21", "22 июля 1995"),
-                ContactResponse("Елена Козлова", "", "23 июля 1988"),
-                ContactResponse("Павел Семёнов", "+7-907-777-88-99", "5 сентября 2000"),
-                ContactResponse("Анастасия Попова", "+7-908-888-99-00", "12 декабря 1993"),
-                ContactResponse("Константин Зайцев", "", "8 апреля 1985"),
-                ContactResponse("Виктория Лебедева", "+7-909-999-00-11", "30 ноября 1998"),
-                ContactResponse("Артём Кузнецов", "+7-910-000-11-22", "3 февраля 1991"),
+                ContactResponse(1, "+7-901-111-22-33", "Анна Соколова"),
+                ContactResponse(2, "+7-902-222-33-44", "Дмитрий Белов"),
+                ContactResponse(3, "+7-903-333-44-55", "Юлия Морозова"),
+                ContactResponse(4, "+7-904-444-55-66", "Михаил Волков"),
+                ContactResponse(5, "+7-905-555-66-77", "Татьяна Орлова"),
+                ContactResponse(6, "+7-906-666-77-88", "Сергей Козлов"),
+                ContactResponse(7, "+7-907-777-88-99", "Ольга Новикова"),
+                ContactResponse(8, "+7-908-888-99-00", "Алексей Фёдоров"),
+                ContactResponse(9, "+7-909-999-00-11", "Наталья Григорьева"),
+                ContactResponse(10, "+7-910-000-11-22", "Иван Иванов"),
+                ContactResponse(11, "+7-911-111-22-33", "Мария Петрова"),
+                ContactResponse(12, "+7-912-222-33-44", "Елена Козлова"),
+                ContactResponse(13, "+7-913-333-44-55", "Павел Семёнов"),
+                ContactResponse(14, "+7-914-444-55-66", "Анастасия Попова"),
+                ContactResponse(15, "+7-915-555-66-77", null),
+                ContactResponse(16, "+7-916-666-77-88", "Виктория Лебедева"),
+                ContactResponse(17, "+7-917-777-88-99", "Артём Кузнецов"),
             )
         )
     }

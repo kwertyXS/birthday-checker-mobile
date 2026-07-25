@@ -242,7 +242,7 @@ private fun ContactCard(contact: ContactInfo) {
                     color = TextPrimary,
                 )
                 Text(
-                    text = contact.birthday ?: "",
+                    text = contact.phone ?: "",
                     fontSize = 14.sp,
                     color = TextSecondary,
                 )
