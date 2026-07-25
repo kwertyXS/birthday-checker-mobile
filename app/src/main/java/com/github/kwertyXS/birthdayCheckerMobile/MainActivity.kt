@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.github.kwertyXS.birthdayCheckerMobile.graph.MainGraph
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
+import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeUnselected
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BirthdaycheckermobileTheme
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity() {
 fun MainScaffold(
     contactsModel: ContactsModel? = null,
     birthdaysModel: BirthdaysModel? = null,
+    settingsModel: SettingsModel? = null,
     onLogout: () -> Unit = {},
 ) {
     var currentTab by rememberSaveable { mutableStateOf(AppTab.BIRTHDAYS) }
@@ -139,14 +141,14 @@ fun MainScaffold(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CurrentTabContent(currentTab, contactsModel, birthdaysModel, onLogout)
+            CurrentTabContent(currentTab, contactsModel, birthdaysModel, settingsModel, onLogout)
         }
     }
     }
 }
 
 @Composable
-private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthdaysModel: BirthdaysModel?, onLogout: () -> Unit) {
+private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthdaysModel: BirthdaysModel?, settingsModel: SettingsModel?, onLogout: () -> Unit) {
     when (tab) {
         AppTab.BIRTHDAYS -> UpcomingBirthdaysWindow(model = birthdaysModel)
         AppTab.CONTACTS -> {
@@ -154,7 +156,7 @@ private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthd
                 ContactsWindow(model = contactsModel)
             }
         }
-        AppTab.SETTINGS -> AccountSettingsWindow(onLogout = onLogout)
+        AppTab.SETTINGS -> AccountSettingsWindow(model = settingsModel, onLogout = onLogout)
     }
 }
 
