@@ -39,10 +39,12 @@ jobs:
 
       - name: Create draft release
         run: |
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          echo "Uploading $APK"
           gh release create build-${{ github.run_number }} \
             --title "Build ${{ github.run_number }}" \
             --notes "Automated build from commit ${{ github.sha }}" \
             --draft \
-            app/build/outputs/apk/release/app-release.apk
+            "$APK"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
