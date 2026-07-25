@@ -24,8 +24,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,11 +53,14 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun ContactsWindow(model: ContactsModel? = null) {
     val state = model?.state?.collectAsState()
     val contacts = state?.value?.contacts.orEmpty()
+    val isLoading = state?.value?.isLoading == true
+    val error = state?.value?.error ?: ""
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -75,35 +80,37 @@ fun ContactsWindow(model: ContactsModel? = null) {
             .background(BeigeBackground)
             .padding(horizontal = 20.dp)
     ) {
-        if (state?.value?.isLoading == true) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(stringResource(R.string.contacts_loading), color = TextSecondary)
-            }
-        } else if (state?.value?.error?.isNotEmpty() == true) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(state.value.error, color = OrangeAccent)
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 8.dp),
-            ) {
-                item { Spacer(Modifier.padding(0.dp)) }
-                items(contacts) { contact ->
-                    ContactCard(contact)
+        PullToRefreshBox(
+            isRefreshing = isLoading,
+            onRefresh = { model?.loadContacts() },
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            if (isLoading && contacts.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(stringResource(R.string.contacts_loading), color = TextSecondary)
+                }
+            } else if (error.isNotEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(error, color = OrangeAccent)
+                }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 72.dp),
+                ) {
+                    item { Spacer(Modifier.padding(0.dp)) }
+                    items(contacts) { contact ->
+                        ContactCard(contact)
+                    }
                 }
             }
         }
-
-        Spacer(Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth()

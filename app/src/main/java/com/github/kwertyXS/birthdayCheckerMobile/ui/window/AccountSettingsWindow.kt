@@ -16,7 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettingsWindow(
     model: SettingsModel? = null,
@@ -41,15 +44,17 @@ fun AccountSettingsWindow(
 ) {
     val state = model?.state?.collectAsState()?.value
 
-    Box(
+    PullToRefreshBox(
+        isRefreshing = state?.isLoading == true,
+        onRefresh = { model?.loadUser() },
         modifier = Modifier
             .fillMaxSize()
-            .background(BeigeBackground)
-            .verticalScroll(rememberScrollState())
+            .background(BeigeBackground),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 14.dp)
         ) {
             Spacer(Modifier.height(6.dp))

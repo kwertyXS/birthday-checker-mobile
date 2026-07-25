@@ -50,7 +50,10 @@ class BirthdaysModel @Inject constructor(
                 },
                 onFailure = { e ->
                     Log.e("BirthdaysModel", "Failed to load contacts: ${e.message}")
-                    _state.value = BirthdaysState(error = e.message ?: "Failed to load birthdays")
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to load birthdays",
+                    )
                 },
             )
         }

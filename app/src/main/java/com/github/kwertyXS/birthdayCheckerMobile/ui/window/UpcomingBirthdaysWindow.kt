@@ -17,7 +17,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,6 +50,7 @@ private fun tabTitles(): List<String> = listOf(
     stringResource(R.string.birthdays_tomorrow),
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: BirthdayGroup? = null, previewTab: Int = 1) {
     val state = model?.state?.collectAsState()
@@ -58,74 +61,81 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
 
     val tabs = tabTitles()
 
-    Column(
+    PullToRefreshBox(
+        isRefreshing = isLoading,
+        onRefresh = { model?.loadBirthdays() },
         modifier = Modifier
             .fillMaxSize()
-            .background(BeigeBackground)
-            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .background(BeigeBackground),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp, vertical = 10.dp)
         ) {
-            tabs.forEachIndexed { index, label ->
-                val isSelected = index == selectedTab
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (isSelected) OrangeAccent else CardWhite)
-                        .clickable { model?.selectTab(index) }
-                        .padding(vertical = 6.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = label,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = if (isSelected) CardWhite else BeigeUnselected,
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                tabs.forEachIndexed { index, label ->
+                    val isSelected = index == selectedTab
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(if (isSelected) OrangeAccent else CardWhite)
+                            .clickable { model?.selectTab(index) }
+                            .padding(vertical = 6.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = label,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (isSelected) CardWhite else BeigeUnselected,
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(20.dp))
 
-        val contacts = when (selectedTab) {
-            0 -> groups?.yesterday ?: emptyList()
-            1 -> groups?.today ?: emptyList()
-            2 -> groups?.tomorrow ?: emptyList()
-            else -> emptyList()
-        }
+            val contacts = when (selectedTab) {
+                0 -> groups?.yesterday ?: emptyList()
+                1 -> groups?.today ?: emptyList()
+                2 -> groups?.tomorrow ?: emptyList()
+                else -> emptyList()
+            }
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(stringResource(R.string.birthdays_loading), color = TextSecondary)
-            }
-        } else if (error.isNotEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(error, color = OrangeAccent)
-            }
-        } else if (contacts.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(stringResource(R.string.birthdays_empty), color = TextSecondary)
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 8.dp, top = 0.dp),
-            ) {
-                items(contacts) { person ->
-                    BirthdayCard(person)
+            if (isLoading && contacts.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(stringResource(R.string.birthdays_loading), color = TextSecondary)
+                }
+            } else if (error.isNotEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(error, color = OrangeAccent)
+                }
+            } else if (contacts.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(stringResource(R.string.birthdays_empty), color = TextSecondary)
+                }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 8.dp, top = 0.dp),
+                ) {
+                    items(contacts) { person ->
+                        BirthdayCard(person)
+                    }
                 }
             }
         }

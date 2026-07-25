@@ -45,7 +45,10 @@ class ContactsModel @Inject constructor(
                     )
                 },
                 onFailure = { e ->
-                    _state.value = ContactsState(error = e.message ?: "Failed to load contacts")
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to load contacts",
+                    )
                 },
             )
         }
