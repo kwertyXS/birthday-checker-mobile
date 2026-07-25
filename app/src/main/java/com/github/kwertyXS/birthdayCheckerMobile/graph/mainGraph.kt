@@ -10,6 +10,7 @@ import com.github.kwertyXS.birthdayCheckerMobile.MainScaffold
 import com.github.kwertyXS.birthdayCheckerMobile.models.AuthModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
+import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
 
 @Composable
@@ -18,6 +19,7 @@ fun MainGraph() {
     val authModel: AuthModel = hiltViewModel()
     val contactsModel: ContactsModel = hiltViewModel()
     val birthdaysModel: BirthdaysModel = hiltViewModel()
+    val settingsModel: SettingsModel = hiltViewModel()
     val startDestination = remember { if (authModel.isLoggedIn()) "main" else "auth" }
 
     NavHost(
@@ -30,6 +32,7 @@ fun MainGraph() {
             MainScaffold(
                 contactsModel = contactsModel,
                 birthdaysModel = birthdaysModel,
+                settingsModel = settingsModel,
                 onLogout = {
                     authModel.onEvent(AuthEvent.Logout)
                     navController.navigate("auth") {

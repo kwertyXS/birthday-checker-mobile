@@ -35,9 +35,30 @@ data class AccessTokenResponse(
 // ─── Contact Response ─────────────────────────────────────────────────────────
 
 data class ContactResponse(
-    val name: String = "",
+    @SerializedName("user_id")
+    val userId: Int = 0,
     val phone: String = "",
-    val birthday: String = "",
+    val name: String? = null,
+    val birthday: String? = null,
+)
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+data class UserResponse(
+    val phone: String = "",
+    val name: String? = null,
+    val nickname: String? = null,
+    @SerializedName("telegram_id")
+    val telegramId: String? = null,
+    val birthday: String? = null,
+)
+
+data class UserEditRequest(
+    val name: String? = null,
+    val nickname: String? = null,
+    @SerializedName("telegram_id")
+    val telegramId: String? = null,
+    val birthday: String? = null,
 )
 
 // ─── Error ────────────────────────────────────────────────────────────────────

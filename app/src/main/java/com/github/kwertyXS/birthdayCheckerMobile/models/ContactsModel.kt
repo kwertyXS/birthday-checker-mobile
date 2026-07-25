@@ -12,8 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ContactInfo(
+    val userId: Int = 0,
     val fullName: String = "",
-    val birthday: String = "",
+    val phone: String = "",
 )
 
 data class ContactsState(
@@ -40,12 +41,30 @@ class ContactsModel @Inject constructor(
                 onSuccess = { contacts ->
                     _state.value = ContactsState(
                         contacts = contacts.map {
-                            ContactInfo(fullName = it.name ?: "", birthday = it.birthday ?: "")
+                            ContactInfo(userId = it.userId, fullName = it.name ?: "", phone = it.phone)
                         },
                     )
                 },
                 onFailure = { e ->
-                    _state.value = ContactsState(error = e.message ?: "Failed to load contacts")
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to load contacts",
+                    )
+                },
+            )
+        }
+    }
+
+    fun deleteContact(contactId: Int) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            repository.deleteContact(contactId).fold(
+                onSuccess = { loadContacts() },
+                onFailure = { e ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to delete contact",
+                    )
                 },
             )
         }

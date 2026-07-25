@@ -11,59 +11,69 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
+import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BrownText
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeLight
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettingsWindow(
+    model: SettingsModel? = null,
     onLogout: () -> Unit = {},
 ) {
-    Box(
+    val state = model?.state?.collectAsState()?.value
+
+    val pullRefreshState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        isRefreshing = state?.isLoading == true,
+        onRefresh = { model?.loadUser() },
+        state = pullRefreshState,
         modifier = Modifier
             .fillMaxSize()
-            .background(BeigeBackground)
-            .verticalScroll(rememberScrollState())
+            .background(BeigeBackground),
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                isRefreshing = state?.isLoading == true,
+                state = pullRefreshState,
+                containerColor = OrangeLight,
+                color = BrownText,
+            )
+        },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 14.dp)
         ) {
-            Text(
-                text = "Account Settings",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = "Manage your account",
-                fontSize = 14.sp,
-                color = TextSecondary,
-            )
-
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(6.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -76,11 +86,9 @@ fun AccountSettingsWindow(
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
-                    SettingsRow(label = "Phone", value = "+7 123 456 78 90")
+                    SettingsRow(label = stringResource(R.string.settings_phone), value = state?.phone ?: "")
                     HorizontalDivider()
-                    SettingsRow(label = "Date of Birth", value = "01.01.2000")
-                    HorizontalDivider()
-                    SettingsRow(label = "Notifications", value = "Enabled")
+                    SettingsRow(label = stringResource(R.string.settings_birthday), value = state?.birthday ?: "")
                 }
             }
 
@@ -100,7 +108,7 @@ fun AccountSettingsWindow(
                         .padding(20.dp)
                 ) {
                     Text(
-                        text = "Logout",
+                        text = stringResource(R.string.settings_logout),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = OrangeAccent,

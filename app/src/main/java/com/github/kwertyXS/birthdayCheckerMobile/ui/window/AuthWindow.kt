@@ -36,11 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.models.AuthModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
@@ -49,6 +51,9 @@ import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.InputBorder
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // ─── Phone entry (login & register share this) ────────────────────────────────
 
@@ -70,7 +75,7 @@ fun PhoneEntryWindow(model: AuthModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Enter your phone",
+                    text = stringResource(R.string.auth_phone_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
@@ -79,7 +84,7 @@ fun PhoneEntryWindow(model: AuthModel) {
                 Spacer(Modifier.height(4.dp))
 
                 Text(
-                    text = "We'll remember your special days",
+                    text = stringResource(R.string.auth_phone_subtitle),
                     fontSize = 14.sp,
                     color = TextSecondary,
                 )
@@ -89,7 +94,7 @@ fun PhoneEntryWindow(model: AuthModel) {
                 OutlinedTextField(
                     value = state.phone,
                     onValueChange = { model.onEvent(AuthEvent.PhoneChanged(it)) },
-                    label = { Text("Phone Number") },
+                    label = { Text(stringResource(R.string.auth_phone_label)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -126,7 +131,7 @@ fun PhoneEntryWindow(model: AuthModel) {
                     enabled = state.phone.length >= 10 && !state.isLoading,
                 ) {
                     Text(
-                        text = "Continue",
+                        text = stringResource(R.string.auth_continue),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -159,7 +164,7 @@ fun VerifyCodeWindow(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Verify Phone",
+                    text = stringResource(R.string.auth_verify_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
@@ -168,7 +173,7 @@ fun VerifyCodeWindow(
                 Spacer(Modifier.height(4.dp))
 
                 Text(
-                    text = "Enter the code sent to your phone",
+                    text = stringResource(R.string.auth_verify_subtitle),
                     fontSize = 14.sp,
                     color = TextSecondary,
                 )
@@ -178,7 +183,7 @@ fun VerifyCodeWindow(
                 OutlinedTextField(
                     value = state.verificationCode,
                     onValueChange = { if (it.length <= 6) model.onEvent(AuthEvent.CodeChanged(it)) },
-                    label = { Text("Code") },
+                    label = { Text(stringResource(R.string.auth_code_label)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -215,7 +220,7 @@ fun VerifyCodeWindow(
                     enabled = state.verificationCode.length == 6 && !state.isLoading,
                 ) {
                     Text(
-                        text = "Verify",
+                        text = stringResource(R.string.auth_verify_button),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -224,7 +229,7 @@ fun VerifyCodeWindow(
                 Spacer(Modifier.height(12.dp))
 
                 TextButton(onClick = onBack) {
-                    Text("Back", fontSize = 14.sp, color = TextSecondary)
+                    Text(stringResource(R.string.auth_back), fontSize = 14.sp, color = TextSecondary)
                 }
             }
         }
@@ -265,7 +270,7 @@ fun BirthdayWindow(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Your Birthday",
+                    text = stringResource(R.string.auth_birthday_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
@@ -274,7 +279,7 @@ fun BirthdayWindow(
                 Spacer(Modifier.height(4.dp))
 
                 Text(
-                    text = "Help us remember your special day",
+                    text = stringResource(R.string.auth_birthday_subtitle),
                     fontSize = 14.sp,
                     color = TextSecondary,
                 )
@@ -284,8 +289,8 @@ fun BirthdayWindow(
                 OutlinedTextField(
                     value = state.birthday,
                     onValueChange = {},
-                    label = { Text("Date of Birth") },
-                    placeholder = { Text("Select date") },
+                    label = { Text(stringResource(R.string.auth_birthday_label)) },
+                    placeholder = { Text(stringResource(R.string.auth_birthday_placeholder)) },
                     readOnly = true,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -297,7 +302,7 @@ fun BirthdayWindow(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
-                                contentDescription = "Pick date",
+                                contentDescription = stringResource(R.string.auth_birthday_pick_content_description),
                                 tint = OrangeAccent,
                             )
                         }
@@ -325,7 +330,7 @@ fun BirthdayWindow(
                     enabled = state.birthday.isNotEmpty(),
                 ) {
                     Text(
-                        text = "Continue",
+                        text = stringResource(R.string.auth_continue),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -334,7 +339,7 @@ fun BirthdayWindow(
                 Spacer(Modifier.height(12.dp))
 
                 TextButton(onClick = onBack) {
-                    Text("Back", fontSize = 14.sp, color = TextSecondary)
+                    Text(stringResource(R.string.auth_back), fontSize = 14.sp, color = TextSecondary)
                 }
             }
         }
@@ -380,16 +385,16 @@ private fun BirthdayDatePickerDialog(
         confirmButton = {
             TextButton(onClick = {
                 datePickerState.selectedDateMillis?.let { millis ->
-                    val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-                    onDateSelected(formatter.format(java.util.Date(millis)))
+                    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    onDateSelected(formatter.format(Date(millis)))
                 } ?: onDismiss()
             }) {
-                Text("OK", color = OrangeAccent)
+                Text(stringResource(R.string.auth_ok), color = OrangeAccent)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = TextSecondary)
+                Text(stringResource(R.string.auth_cancel), color = TextSecondary)
             }
         },
     ) {

@@ -24,4 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "birthday-checker-mobile"
 include(":app")
- 

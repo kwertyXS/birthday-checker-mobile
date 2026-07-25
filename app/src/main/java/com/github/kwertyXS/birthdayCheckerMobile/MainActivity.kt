@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.github.kwertyXS.birthdayCheckerMobile.graph.MainGraph
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
+import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeUnselected
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BirthdaycheckermobileTheme
@@ -69,6 +72,7 @@ class MainActivity : ComponentActivity() {
 fun MainScaffold(
     contactsModel: ContactsModel? = null,
     birthdaysModel: BirthdaysModel? = null,
+    settingsModel: SettingsModel? = null,
     onLogout: () -> Unit = {},
 ) {
     var currentTab by rememberSaveable { mutableStateOf(AppTab.BIRTHDAYS) }
@@ -83,16 +87,16 @@ fun MainScaffold(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+                    .clip(RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp))
                     .background(OrangeAccent)
             ) {
                 Column(
                     modifier = Modifier
                         .statusBarsPadding()
-                        .padding(top = 5.dp, bottom = 20.dp, start = 24.dp, end = 24.dp)
+                        .padding(top = 5.dp, bottom = 12.dp, start = 20.dp, end = 24.dp)
                 ) {
                     Text(
-                        text = "Today",
+                        text = stringResource(R.string.topbar_title),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = CardWhite,
@@ -115,11 +119,11 @@ fun MainScaffold(
                         icon = {
                             Icon(
                                 painter = painterResource(tab.icon),
-                                contentDescription = tab.label,
+                                contentDescription = stringResource(tab.labelRes),
                                 modifier = Modifier.size(20.dp),
                             )
                         },
-                        label = { Text(tab.label) },
+                        label = { Text(stringResource(tab.labelRes)) },
                         selected = currentTab == tab,
                         onClick = { currentTab = tab },
                         colors = NavigationBarItemDefaults.colors(
@@ -139,14 +143,14 @@ fun MainScaffold(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CurrentTabContent(currentTab, contactsModel, birthdaysModel, onLogout)
+            CurrentTabContent(currentTab, contactsModel, birthdaysModel, settingsModel, onLogout)
         }
     }
     }
 }
 
 @Composable
-private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthdaysModel: BirthdaysModel?, onLogout: () -> Unit) {
+private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthdaysModel: BirthdaysModel?, settingsModel: SettingsModel?, onLogout: () -> Unit) {
     when (tab) {
         AppTab.BIRTHDAYS -> UpcomingBirthdaysWindow(model = birthdaysModel)
         AppTab.CONTACTS -> {
@@ -154,15 +158,15 @@ private fun CurrentTabContent(tab: AppTab, contactsModel: ContactsModel?, birthd
                 ContactsWindow(model = contactsModel)
             }
         }
-        AppTab.SETTINGS -> AccountSettingsWindow(onLogout = onLogout)
+        AppTab.SETTINGS -> AccountSettingsWindow(model = settingsModel, onLogout = onLogout)
     }
 }
 
 enum class AppTab(
-    val label: String,
+    @StringRes val labelRes: Int,
     val icon: Int,
 ) {
-    BIRTHDAYS("Birthdays", R.drawable.ic_time),
-    CONTACTS("Contacts", R.drawable.ic_bell),
-    SETTINGS("Settings", R.drawable.ic_sun),
+    BIRTHDAYS(R.string.tab_birthdays, R.drawable.ic_time),
+    CONTACTS(R.string.tab_contacts, R.drawable.ic_bell),
+    SETTINGS(R.string.tab_settings, R.drawable.ic_sun),
 }

@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,7 +78,7 @@ fun ContactsPermissionWindow(
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = "Access Contacts",
+                        text = stringResource(R.string.permission_title),
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = TextPrimary,
@@ -87,7 +88,7 @@ fun ContactsPermissionWindow(
                     Spacer(Modifier.height(12.dp))
 
                     Text(
-                        text = "We need access to your contacts to check whose birthday is coming up",
+                        text = stringResource(R.string.permission_description),
                         fontSize = 14.sp,
                         color = TextSecondary,
                         textAlign = TextAlign.Center,
@@ -107,7 +108,7 @@ fun ContactsPermissionWindow(
                         ),
                     ) {
                         Text(
-                            text = "Allow",
+                            text = stringResource(R.string.permission_allow),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                         )
@@ -126,7 +127,7 @@ fun ContactsPermissionWindow(
                         ),
                     ) {
                         Text(
-                            text = "Not now",
+                            text = stringResource(R.string.permission_not_now),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                         )

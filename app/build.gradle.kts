@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -6,13 +8,31 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = if (keystorePropsFile.exists()) {
+    Properties().apply { load(keystorePropsFile.inputStream()) }
+} else null
+
+fun props(key: String) = keystoreProps?.getProperty(key) ?: System.getenv(key) ?: ""
+
 android {
     namespace = "com.github.kwertyXS.birthdayCheckerMobile"
     compileSdk = 37
 
+    buildFeatures.buildConfig = true
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(props("storeFile").ifEmpty { "keystore.jks" })
+            storePassword = props("storePassword").ifEmpty { return@create }
+            keyAlias = props("keyAlias").ifEmpty { return@create }
+            keyPassword = props("keyPassword").ifEmpty { return@create }
+        }
+    }
+
     defaultConfig {
         applicationId = "com.github.kwertyXS.birthdayCheckerMobile"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -27,6 +47,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
+            buildConfigField("boolean", "DEBUG_MODE", "false")
+        }
+        debug {
+            buildConfigField("boolean", "DEBUG_MODE", "true")
         }
     }
     compileOptions {
@@ -59,6 +84,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-graphics:$composeVersion")
     implementation("androidx.compose.ui:ui-text:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation-layout:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.material3:material3:1.3.0") // Современный Material 3
@@ -76,6 +102,7 @@ dependencies {
     // 5. Сеть
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // 6. HILT ДЛЯ DI
     implementation("com.google.dagger:hilt-android:2.60.1")

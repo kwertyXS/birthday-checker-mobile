@@ -1,3 +1,68 @@
 <resources>
-    <string name="app_name">birthday-checker-mobile</string>
+    <string name="app_name">BdayPulse</string>
+
+    <!-- Top bar -->
+    <string name="topbar_title">Today</string>
+
+    <!-- Bottom tabs -->
+    <string name="tab_birthdays">Birthdays</string>
+    <string name="tab_contacts">Contacts</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Auth – Phone -->
+    <string name="auth_phone_title">Enter your phone</string>
+    <string name="auth_phone_subtitle">We\'ll remember your special days</string>
+    <string name="auth_phone_label">Phone Number</string>
+    <string name="auth_continue">Continue</string>
+
+    <!-- Auth – Verify -->
+    <string name="auth_verify_title">Verify Phone</string>
+    <string name="auth_verify_subtitle">Enter the code sent to your phone</string>
+    <string name="auth_code_label">Code</string>
+    <string name="auth_verify_button">Verify</string>
+    <string name="auth_back">Back</string>
+
+    <!-- Auth – Birthday -->
+    <string name="auth_birthday_title">Your Birthday</string>
+    <string name="auth_birthday_subtitle">Help us remember your special day</string>
+    <string name="auth_birthday_label">Date of Birth</string>
+    <string name="auth_birthday_placeholder">Select date</string>
+    <string name="auth_birthday_pick_content_description">Pick date</string>
+    <string name="auth_ok">OK</string>
+    <string name="auth_cancel">Cancel</string>
+
+    <!-- Contacts -->
+    <string name="contacts_loading">Loading…</string>
+    <string name="contacts_add_content_description">Add Contact</string>
+    <string name="contacts_sync_content_description">Sync</string>
+    <string name="contacts_dialog_title">Add Contact</string>
+    <string name="contacts_name_label">Name</string>
+    <string name="contacts_phone_label">Phone</string>
+    <string name="contacts_add_button">Add</string>
+    <string name="contacts_cancel">Cancel</string>
+
+    <!-- Contacts Permission -->
+    <string name="permission_title">Access Contacts</string>
+    <string name="permission_description">We need access to your contacts to check whose birthday is coming up</string>
+    <string name="permission_allow">Allow</string>
+    <string name="permission_not_now">Not now</string>
+
+    <!-- Settings -->
+    <string name="settings_phone">Phone</string>
+    <string name="settings_birthday">Date of Birth</string>
+    <string name="settings_logout">Logout</string>
+
+    <!-- Delete -->
+    <string name="contacts_delete_content_description">Delete contact</string>
+    <string name="contacts_delete_dialog_title">Delete contact</string>
+    <string name="contacts_delete_dialog_message">Are you sure you want to delete %1$s?</string>
+    <string name="contacts_delete_confirm">Delete</string>
+    <string name="birthdays_phone_content_description">Call contact</string>
+
+    <!-- Birthdays -->
+    <string name="birthdays_loading">Loading…</string>
+    <string name="birthdays_empty">No birthdays</string>
+    <string name="birthdays_yesterday">Yesterday</string>
+    <string name="birthdays_today">Today</string>
+    <string name="birthdays_tomorrow">Tomorrow</string>
 </resources>
