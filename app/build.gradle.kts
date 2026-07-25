@@ -15,18 +15,22 @@ val keystoreProps = if (keystorePropsFile.exists()) {
 
 fun props(key: String) = keystoreProps?.getProperty(key) ?: System.getenv(key) ?: ""
 
+val hasReleaseSigning = listOf("storePassword", "keyAlias", "keyPassword").all { props(it).isNotEmpty() }
+
 android {
     namespace = "com.github.kwertyXS.birthdayCheckerMobile"
     compileSdk = 37
 
     buildFeatures.buildConfig = true
 
-    signingConfigs {
-        create("release") {
-            storeFile = file(props("storeFile").ifEmpty { "keystore.jks" })
-            storePassword = props("storePassword").ifEmpty { return@create }
-            keyAlias = props("keyAlias").ifEmpty { return@create }
-            keyPassword = props("keyPassword").ifEmpty { return@create }
+    if (hasReleaseSigning) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(props("storeFile").ifEmpty { "keystore.jks" })
+                storePassword = props("storePassword")
+                keyAlias = props("keyAlias")
+                keyPassword = props("keyPassword")
+            }
         }
     }
 
@@ -47,7 +51,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             buildConfigField("boolean", "DEBUG_MODE", "false")
         }
         debug {
