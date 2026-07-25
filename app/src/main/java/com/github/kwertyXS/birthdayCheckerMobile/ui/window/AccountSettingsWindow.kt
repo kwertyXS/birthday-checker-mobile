@@ -19,6 +19,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,8 +33,10 @@ import androidx.compose.ui.unit.sp
 import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BrownText
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeLight
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextSecondary
 
@@ -44,12 +48,24 @@ fun AccountSettingsWindow(
 ) {
     val state = model?.state?.collectAsState()?.value
 
+    val pullRefreshState = rememberPullToRefreshState()
+
     PullToRefreshBox(
         isRefreshing = state?.isLoading == true,
         onRefresh = { model?.loadUser() },
+        state = pullRefreshState,
         modifier = Modifier
             .fillMaxSize()
             .background(BeigeBackground),
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                isRefreshing = state?.isLoading == true,
+                state = pullRefreshState,
+                containerColor = OrangeLight,
+                color = BrownText,
+            )
+        },
     ) {
         Column(
             modifier = Modifier

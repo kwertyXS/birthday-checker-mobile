@@ -39,6 +39,7 @@ data class ContactResponse(
     val userId: Int = 0,
     val phone: String = "",
     val name: String? = null,
+    val birthday: String? = null,
 )
 
 // ─── User ─────────────────────────────────────────────────────────────────────

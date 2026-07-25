@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">birthday-checker-mobile</string>
+    <string name="app_name">BdayPulse</string>
 
     <!-- Top bar -->
     <string name="topbar_title">Сегодня</string>
@@ -51,6 +51,13 @@
     <string name="settings_phone">Телефон</string>
     <string name="settings_birthday">Дата рождения</string>
     <string name="settings_logout">Выйти</string>
+
+    <!-- Delete -->
+    <string name="contacts_delete_content_description">Удалить контакт</string>
+    <string name="contacts_delete_dialog_title">Удаление контакта</string>
+    <string name="contacts_delete_dialog_message">Вы уверены, что хотите удалить %1$s?</string>
+    <string name="contacts_delete_confirm">Удалить</string>
+    <string name="birthdays_phone_content_description">Позвонить</string>
 
     <!-- Birthdays -->
     <string name="birthdays_loading">Загрузка…</string>
