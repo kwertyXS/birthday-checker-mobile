@@ -37,20 +37,12 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload APK as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
-
       - name: Create draft release
-        uses: softprops/action-gh-release@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: build-${{ github.run_number }}
-          name: Build ${{ github.run_number }}
-          body: |
-            Automated build from commit ${{ github.sha }}
-          draft: true
-          fail_on_unmatched_files: false
-          files: app/build/outputs/apk/release/app-release.apk
+        run: |
+          gh release create build-${{ github.run_number }} \
+            --title "Build ${{ github.run_number }}" \
+            --notes "Automated build from commit ${{ github.sha }}" \
+            --draft \
+            app/build/outputs/apk/release/app-release.apk
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
