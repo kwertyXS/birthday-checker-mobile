@@ -53,7 +53,7 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
         modifier = Modifier
             .fillMaxSize()
             .background(BeigeBackground)
-            .padding(horizontal = 20.dp, vertical = 6.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -67,7 +67,7 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
                         .clip(RoundedCornerShape(6.dp))
                         .background(if (isSelected) OrangeAccent else CardWhite)
                         .clickable { model?.selectTab(index) }
-                        .padding(vertical = 9.dp),
+                        .padding(vertical = 6.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
