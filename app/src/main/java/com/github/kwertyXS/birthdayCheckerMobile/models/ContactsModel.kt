@@ -1,14 +1,18 @@
 package com.github.kwertyXS.birthdayCheckerMobile.models
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.provider.ContactsContract
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 data class ContactInfo(
@@ -26,7 +30,8 @@ data class ContactsState(
 @HiltViewModel
 class ContactsModel @Inject constructor(
     private val repository: Repository,
-) : ViewModel() {
+    private val application: Application,
+) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(ContactsState())
     val state: StateFlow<ContactsState> = _state.asStateFlow()
 
@@ -67,6 +72,40 @@ class ContactsModel @Inject constructor(
                     )
                 },
             )
+        }
+    }
+
+    fun syncContacts() {
+        _state.value = _state.value.copy(isLoading = true, error = "")
+        viewModelScope.launch {
+            val deviceContacts = withContext(Dispatchers.IO) {
+                val list = mutableListOf<Pair<String, String>>()
+                val cursor = application.contentResolver.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    arrayOf(
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ),
+                    null, null, null
+                )
+                cursor?.use { c ->
+                    val nameIdx = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                    val phoneIdx = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    while (c.moveToNext()) {
+                        val name = c.getString(nameIdx)?.takeIf { it.isNotBlank() } ?: continue
+                        val phone = c.getString(phoneIdx)?.takeIf { it.isNotBlank() } ?: continue
+                        list.add(name to phone)
+                    }
+                }
+                list
+            }
+
+            var added = 0
+            for ((name, phone) in deviceContacts) {
+                repository.addContact(phone, name).onSuccess { added++ }
+            }
+
+            loadContacts()
         }
     }
 

@@ -40,6 +40,9 @@
     <string name="contacts_phone_label">Телефон</string>
     <string name="contacts_add_button">Добавить</string>
     <string name="contacts_cancel">Отмена</string>
+    <string name="contacts_sync_dialog_title">Синхронизация контактов</string>
+    <string name="contacts_sync_dialog_message">Импортировать контакты из телефонной книги?</string>
+    <string name="contacts_sync_confirm">Синхронизировать</string>
 
     <!-- Contacts Permission -->
     <string name="permission_title">Доступ к контактам</string>

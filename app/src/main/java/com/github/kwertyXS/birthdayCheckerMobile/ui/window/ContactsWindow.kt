@@ -68,7 +68,47 @@ fun ContactsWindow(model: ContactsModel? = null) {
     val isLoading = state?.value?.isLoading == true
     val error = state?.value?.error ?: ""
     var showDialog by remember { mutableStateOf(false) }
+    var showSyncDialog by remember { mutableStateOf(false) }
     var contactToDelete by remember { mutableStateOf<ContactInfo?>(null) }
+
+    if (showSyncDialog) {
+        AlertDialog(
+            onDismissRequest = { showSyncDialog = false },
+            containerColor = CardWhite,
+            shape = RoundedCornerShape(16.dp),
+            title = {
+                Text(
+                    stringResource(R.string.contacts_sync_dialog_title),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = TextPrimary,
+                )
+            },
+            text = {
+                Text(
+                    stringResource(R.string.contacts_sync_dialog_message),
+                    color = TextSecondary,
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSyncDialog = false
+                        model?.syncContacts()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(stringResource(R.string.contacts_sync_confirm), color = CardWhite)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSyncDialog = false }) {
+                    Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
+                }
+            },
+        )
+    }
 
     contactToDelete?.let { contact ->
         AlertDialog(
@@ -194,7 +234,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             Spacer(Modifier.width(12.dp))
 
             Button(
-                onClick = { model?.loadContacts() },
+                onClick = { showSyncDialog = true },
                 modifier = Modifier.size(52.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
