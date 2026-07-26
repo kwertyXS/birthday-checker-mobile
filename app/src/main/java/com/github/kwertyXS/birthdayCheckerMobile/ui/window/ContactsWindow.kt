@@ -183,30 +183,45 @@ fun ContactsWindow(model: ContactsModel? = null) {
                 )
             },
         ) {
-            if (isLoading && contacts.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(stringResource(R.string.contacts_loading), color = TextSecondary)
-                }
-            } else if (error.isNotEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(error, color = OrangeAccent)
-                }
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 72.dp),
-                ) {
-                    item { Spacer(Modifier.padding(0.dp)) }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 72.dp),
+            ) {
+                if (isLoading && contacts.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(stringResource(R.string.contacts_loading), color = TextSecondary)
+                        }
+                    }
+                    item { Spacer(Modifier.height(1.dp)) }
+                } else if (error.isNotEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(error, color = OrangeAccent)
+                        }
+                    }
+                    item { Spacer(Modifier.height(1.dp)) }
+                } else if (contacts.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(stringResource(R.string.contacts_empty), color = TextSecondary)
+                        }
+                    }
+                    item { Spacer(Modifier.height(1.dp)) }
+                } else {
                     items(contacts) { contact ->
                         ContactCard(contact, onDelete = { contactToDelete = contact })
                     }
-                    item { Spacer(Modifier.padding(0.dp)) }
                 }
             }
         }
