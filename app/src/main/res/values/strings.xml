@@ -40,6 +40,9 @@
     <string name="contacts_phone_label">Phone</string>
     <string name="contacts_add_button">Add</string>
     <string name="contacts_cancel">Cancel</string>
+    <string name="contacts_sync_dialog_title">Sync contacts</string>
+    <string name="contacts_sync_dialog_message">Import contacts from your phone book?</string>
+    <string name="contacts_sync_confirm">Sync</string>
 
     <!-- Contacts Permission -->
     <string name="permission_title">Access Contacts</string>
