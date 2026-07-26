@@ -221,9 +221,11 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     }
                     item { Spacer(Modifier.height(1.dp)) }
                 } else {
+                    item {Spacer(Modifier.size(0.dp))}
                     items(contacts) { contact ->
                         ContactCard(contact, onDelete = { contactToDelete = contact })
                     }
+                    item {Spacer(Modifier.size(0.dp))}
                 }
             }
         }
