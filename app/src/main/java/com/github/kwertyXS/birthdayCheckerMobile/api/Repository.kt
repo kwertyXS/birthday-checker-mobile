@@ -6,7 +6,7 @@ interface Repository {
     suspend fun refreshToken(token: String): Result<AccessTokenResponse>
     suspend fun getUser(): Result<UserResponse>
     suspend fun editUser(body: UserEditRequest): Result<UserResponse>
-    suspend fun addContact(phone: String, name: String): Result<Unit>
+    suspend fun addContacts(contacts: List<ContactRequest>): Result<List<AddContactResult>>
     suspend fun getContacts(): Result<List<ContactResponse>>
     suspend fun deleteContact(contactId: Int): Result<Unit>
 }

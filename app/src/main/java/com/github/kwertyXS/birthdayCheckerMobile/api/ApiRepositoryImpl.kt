@@ -46,8 +46,8 @@ class ApiRepositoryImpl @Inject constructor(
         api.editUser(body)
     }
 
-    override suspend fun addContact(phone: String, name: String): Result<Unit> = runCatching {
-        api.addContact(ContactRequest(phone, name))
+    override suspend fun addContacts(contacts: List<ContactRequest>): Result<List<AddContactResult>> = runCatching {
+        api.addContact(contacts)
     }
 
     override suspend fun getContacts(): Result<List<ContactResponse>> = runCatching {

@@ -4,6 +4,8 @@ import android.app.Application
 import android.provider.ContactsContract
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
+import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,7 +81,7 @@ class ContactsModel @Inject constructor(
         _state.value = _state.value.copy(isLoading = true, error = "")
         viewModelScope.launch {
             val deviceContacts = withContext(Dispatchers.IO) {
-                val list = mutableListOf<Pair<String, String>>()
+                val list = mutableListOf<ContactRequest>()
                 val cursor = application.contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     arrayOf(
@@ -93,28 +95,52 @@ class ContactsModel @Inject constructor(
                     val phoneIdx = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                     while (c.moveToNext()) {
                         val name = c.getString(nameIdx)?.takeIf { it.isNotBlank() } ?: continue
-                        val phone = c.getString(phoneIdx)?.takeIf { it.isNotBlank() } ?: continue
-                        list.add(name to phone)
+                        var phone = c.getString(phoneIdx)?.takeIf { it.isNotBlank() } ?: continue
+                        if (phone.count { it.isDigit() } < 4) continue
+                        phone = phone
+                            .filter { char -> char !in arrayOf('-', ' ', '(', ')') }
+
+                        if ("*" in phone || "#" in phone) continue
+
+                        // обработка "тупых" номеров
+                        if (phone.startsWith("8")) {
+                            phone.subSequence(1, phone.length)
+                            phone = "+7$phone"
+                        }
+                        if (phone.startsWith("80")){
+                            phone.subSequence(2, phone.length)
+                            phone = "+375$phone"
+                        }
+                        list.add(ContactRequest(phone, name))
                     }
                 }
                 list
             }
 
-            var added = 0
-            for ((name, phone) in deviceContacts) {
-                repository.addContact(phone, name).onSuccess { added++ }
-            }
-
-            loadContacts()
+            repository.addContacts(deviceContacts).fold(
+                onSuccess = {
+                    loadContacts()
+                },
+                onFailure = { e ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to sync contacts",
+                    )
+                },
+            )
         }
     }
 
     fun addContact(name: String, phone: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.addContact(phone, name).fold(
-                onSuccess = {
-                    loadContacts()
-                    onResult(true)
+            val request = listOf(ContactRequest(phone, name))
+            repository.addContacts(request).fold(
+                onSuccess = { results ->
+                    val ok = results.any { it.status == "ok" }
+                    if (ok) {
+                        loadContacts()
+                    }
+                    onResult(ok)
                 },
                 onFailure = {
                     onResult(false)

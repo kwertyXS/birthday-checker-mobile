@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -324,8 +326,9 @@ private fun AddContactDialog(
     )
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun ContactCard(contact: ContactInfo, onDelete: () -> Unit = {}) {
+private fun ContactCard(contact: ContactInfo = ContactInfo(5, "Максим Иванов", "+7942542228666"), onDelete: () -> Unit = {}) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -362,11 +365,13 @@ private fun ContactCard(contact: ContactInfo, onDelete: () -> Unit = {}) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextPrimary,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = contact.phone ?: "",
                     fontSize = 14.sp,
                     color = TextSecondary,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
 
@@ -377,7 +382,9 @@ private fun ContactCard(contact: ContactInfo, onDelete: () -> Unit = {}) {
                     .size(40.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color(0x33FF0000))
-                    .clickable(onClick = onDelete),
+                    .clickable(onClick = onDelete)
+                    .defaultMinSize(40.dp)
+                    .weight(1f),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

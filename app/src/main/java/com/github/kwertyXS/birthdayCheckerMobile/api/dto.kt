@@ -61,6 +61,15 @@ data class UserEditRequest(
     val birthday: String? = null,
 )
 
+// ─── Add Contact Batch Response ───────────────────────────────────────────────
+
+data class AddContactResult(
+    val phone: String = "",
+    val status: String = "",
+    val detail: String? = null,
+    val contact: Int? = null,
+)
+
 // ─── Error ────────────────────────────────────────────────────────────────────
 
 data class ValidationError(

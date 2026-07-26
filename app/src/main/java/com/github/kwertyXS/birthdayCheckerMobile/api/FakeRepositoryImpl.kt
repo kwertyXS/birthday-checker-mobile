@@ -48,8 +48,8 @@ class FakeRepositoryImpl @Inject constructor() : Repository {
         )
     }
 
-    override suspend fun addContact(phone: String, name: String): Result<Unit> {
-        return Result.success(Unit)
+    override suspend fun addContacts(contacts: List<ContactRequest>): Result<List<AddContactResult>> {
+        return Result.success(contacts.map { AddContactResult(phone = it.phone, status = "ok", contact = 999) })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

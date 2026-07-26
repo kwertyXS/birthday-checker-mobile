@@ -24,7 +24,7 @@ interface ApiService {
     suspend fun editUser(@Body body: UserEditRequest): UserResponse
 
     @POST("/api/v1/contacts")
-    suspend fun addContact(@Body body: ContactRequest): Unit
+    suspend fun addContact(@Body body: List<ContactRequest>): List<AddContactResult>
 
     @GET("/api/v1/contacts")
     suspend fun getContacts(): List<ContactResponse>
