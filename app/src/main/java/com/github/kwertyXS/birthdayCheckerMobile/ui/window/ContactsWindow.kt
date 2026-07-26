@@ -359,32 +359,33 @@ private fun ContactCard(contact: ContactInfo = ContactInfo(5, "Максим Ив
 
             Spacer(Modifier.width(16.dp))
 
-            Column {
+            Column(
+                modifier = Modifier.weight(1f),
+            ) {
                 Text(
                     text = contact.fullName ?: "",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextPrimary,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    modifier = Modifier.padding(end = 7.dp)
                 )
                 Text(
                     text = contact.phone ?: "",
                     fontSize = 14.sp,
                     color = TextSecondary,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
             }
-
-            Spacer(Modifier.weight(1f))
 
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color(0x33FF0000))
-                    .clickable(onClick = onDelete)
-                    .defaultMinSize(40.dp)
-                    .weight(1f),
+                    .clickable(onClick = onDelete),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

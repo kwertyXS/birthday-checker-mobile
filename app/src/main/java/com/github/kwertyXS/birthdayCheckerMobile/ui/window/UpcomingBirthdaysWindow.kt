@@ -40,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -208,22 +209,26 @@ private fun BirthdayCard(person: ContactResponse) {
 
             Spacer(Modifier.width(16.dp))
 
-            Column {
+            Column(
+                modifier = Modifier.weight(1f).padding(end = 7.dp),
+            ) {
                 Text(
                     text = person.name ?: "",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextPrimary,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
                 Text(
                     text = person.phone,
                     fontSize = 14.sp,
                     color = OrangeAccent,
                     fontWeight = FontWeight.Medium,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
             }
-
-            Spacer(Modifier.weight(1f))
 
             Box(
                 modifier = Modifier
