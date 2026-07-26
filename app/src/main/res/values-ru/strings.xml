@@ -57,6 +57,7 @@
     <string name="contacts_delete_dialog_title">Удаление контакта</string>
     <string name="contacts_delete_dialog_message">Вы уверены, что хотите удалить %1$s?</string>
     <string name="contacts_delete_confirm">Удалить</string>
+    <string name="contacts_empty">Нет контактов</string>
     <string name="birthdays_phone_content_description">Позвонить</string>
 
     <!-- Birthdays -->

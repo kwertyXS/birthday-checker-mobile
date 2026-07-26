@@ -93,37 +93,40 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
             )
         },
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 8.dp),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                tabs.forEachIndexed { index, label ->
-                    val isSelected = index == selectedTab
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(if (isSelected) OrangeAccent else CardWhite)
-                            .clickable { model?.selectTab(index) }
-                            .padding(vertical = 6.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = label,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (isSelected) CardWhite else BeigeUnselected,
-                        )
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    tabs.forEachIndexed { index, label ->
+                        val isSelected = index == selectedTab
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(if (isSelected) OrangeAccent else CardWhite)
+                                .clickable { model?.selectTab(index) }
+                                .padding(vertical = 6.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = label,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isSelected) CardWhite else BeigeUnselected,
+                            )
+                        }
                     }
                 }
+                Spacer(Modifier.height(20.dp))
             }
-
-            Spacer(Modifier.height(20.dp))
 
             val contacts = when (selectedTab) {
                 0 -> groups?.yesterday ?: emptyList()
@@ -133,34 +136,38 @@ fun UpcomingBirthdaysWindow(model: BirthdaysModel? = null, previewGroup: Birthda
             }
 
             if (isLoading && contacts.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(stringResource(R.string.birthdays_loading), color = TextSecondary)
-                }
-            } else if (error.isNotEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(error, color = OrangeAccent)
-                }
-            } else if (contacts.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(stringResource(R.string.birthdays_empty), color = TextSecondary)
-                }
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 8.dp, top = 0.dp),
-                ) {
-                    items(contacts) { person ->
-                        BirthdayCard(person)
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(stringResource(R.string.birthdays_loading), color = TextSecondary)
                     }
+                }
+                item { Spacer(Modifier.height(1.dp)) }
+            } else if (error.isNotEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(error, color = OrangeAccent)
+                    }
+                }
+                item { Spacer(Modifier.height(1.dp)) }
+            } else if (contacts.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().fillParentMaxHeight(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(stringResource(R.string.birthdays_empty), color = TextSecondary)
+                    }
+                }
+                item { Spacer(Modifier.height(1.dp)) }
+            } else {
+                items(contacts) { person ->
+                    BirthdayCard(person)
                 }
             }
         }
