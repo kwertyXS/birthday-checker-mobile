@@ -1,7 +1,15 @@
-package com.github.kwertyXS.birthdayCheckerMobile.api
+package com.github.kwertyXS.birthdayCheckerMobile.api.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.github.kwertyXS.birthdayCheckerMobile.api.AccessTokenResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
+import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.RefreshTokenResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.api.UserEditRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.UserResponse
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +57,13 @@ class FakeRepositoryImpl @Inject constructor() : Repository {
     }
 
     override suspend fun addContacts(contacts: List<ContactRequest>): Result<List<AddContactResult>> {
-        return Result.success(contacts.map { AddContactResult(phone = it.phone, status = "ok", contact = 999) })
+        return Result.success(contacts.map {
+            AddContactResult(
+                phone = it.phone,
+                status = "ok",
+                contact = 999
+            )
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

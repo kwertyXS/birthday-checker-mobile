@@ -104,6 +104,7 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.androidx.room.ktx)
+    ksp("androidx.room:room-compiler:2.8.4")
 
     // 5. Сеть
     implementation("com.squareup.retrofit2:retrofit:2.11.0")

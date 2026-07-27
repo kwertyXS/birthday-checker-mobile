@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
-import com.github.kwertyXS.birthdayCheckerMobile.api.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

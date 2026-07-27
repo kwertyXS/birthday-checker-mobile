@@ -1,5 +1,17 @@
-package com.github.kwertyXS.birthdayCheckerMobile.api
+package com.github.kwertyXS.birthdayCheckerMobile.api.repository
 
+import com.github.kwertyXS.birthdayCheckerMobile.api.AccessTokenResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
+import com.github.kwertyXS.birthdayCheckerMobile.api.ApiService
+import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.LoginRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.RefreshTokenResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.RegistrationRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.api.TokenManager
+import com.github.kwertyXS.birthdayCheckerMobile.api.UserEditRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.UserResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 

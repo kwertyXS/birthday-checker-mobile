@@ -1,5 +1,7 @@
 package com.github.kwertyXS.birthdayCheckerMobile.api
 
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.ApiRepositoryImpl
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

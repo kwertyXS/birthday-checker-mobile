@@ -2,7 +2,7 @@ package com.github.kwertyXS.birthdayCheckerMobile.models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kwertyXS.birthdayCheckerMobile.api.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
