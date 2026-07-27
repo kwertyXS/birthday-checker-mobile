@@ -70,6 +70,19 @@ data class AddContactResult(
     val contact: Int? = null,
 )
 
+// ─── Delete Contact Batch ─────────────────────────────────────────────────────
+
+data class DeleteContactRequest(
+    @SerializedName("contact_id")
+    val contactId: Int,
+)
+
+data class DeleteContactResult(
+    val status: String = "",
+    val detail: String? = null,
+    val contact: Int = 0,
+)
+
 // ─── Error ────────────────────────────────────────────────────────────────────
 
 data class ValidationError(

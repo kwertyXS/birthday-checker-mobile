@@ -5,6 +5,8 @@ import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.ApiService
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.DeleteContactRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.DeleteContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.LoginRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.RefreshTokenResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.RegistrationRequest
@@ -66,7 +68,7 @@ class ApiRepositoryImpl @Inject constructor(
         api.getContacts()
     }
 
-    override suspend fun deleteContact(contactId: Int): Result<Unit> = runCatching {
-        api.deleteContact(contactId)
+    override suspend fun deleteContacts(contacts: List<DeleteContactRequest>): Result<List<DeleteContactResult>> = runCatching {
+        api.deleteContact(contacts)
     }
 }

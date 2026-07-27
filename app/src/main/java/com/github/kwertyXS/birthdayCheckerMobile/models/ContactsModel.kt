@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.DeleteContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import com.github.kwertyXS.birthdayCheckerMobile.db.ContactEntity
 import com.github.kwertyXS.birthdayCheckerMobile.db.Dao
@@ -81,8 +82,18 @@ class ContactsModel @Inject constructor(
     fun deleteContact(contactId: Int) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            repository.deleteContact(contactId).fold(
-                onSuccess = { loadContacts() },
+            repository.deleteContacts(listOf(DeleteContactRequest(contactId))).fold(
+                onSuccess = { results ->
+                    val failed = results.filter { it.status != "ok" }
+                    if (failed.isEmpty()) {
+                        loadContacts()
+                    } else {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            error = failed.firstNotNullOfOrNull { it.detail } ?: "Failed to delete contact",
+                        )
+                    }
+                },
                 onFailure = { e ->
                     _state.value = _state.value.copy(
                         isLoading = false,
