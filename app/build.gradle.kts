@@ -116,6 +116,11 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.60.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    // 7. шифрование ключей
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+
+
     // Тесты
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

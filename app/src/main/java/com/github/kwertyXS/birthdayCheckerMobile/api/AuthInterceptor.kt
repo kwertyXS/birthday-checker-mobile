@@ -1,5 +1,6 @@
 package com.github.kwertyXS.birthdayCheckerMobile.api
 
+import com.github.kwertyXS.birthdayCheckerMobile.managers.TokenManager
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
