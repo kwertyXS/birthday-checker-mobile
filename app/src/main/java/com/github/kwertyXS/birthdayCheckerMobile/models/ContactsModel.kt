@@ -4,10 +4,12 @@ import android.app.Application
 import android.provider.ContactsContract
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
+import com.github.kwertyXS.birthdayCheckerMobile.db.ContactEntity
+import com.github.kwertyXS.birthdayCheckerMobile.db.Dao
+import com.github.kwertyXS.birthdayCheckerMobile.db.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +35,7 @@ data class ContactsState(
 class ContactsModel @Inject constructor(
     private val repository: Repository,
     private val application: Application,
+    private val dao: Dao,
 ) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(ContactsState())
     val state: StateFlow<ContactsState> = _state.asStateFlow()
@@ -46,6 +49,10 @@ class ContactsModel @Inject constructor(
         viewModelScope.launch {
             repository.getContacts().fold(
                 onSuccess = { contacts ->
+                    withContext(Dispatchers.IO) {
+                        dao.deleteAll()
+                        dao.insertAll(contacts.map { it.toEntity() })
+                    }
                     _state.value = ContactsState(
                         contacts = contacts.map {
                             ContactInfo(userId = it.userId, fullName = it.name ?: "", phone = it.phone)
@@ -53,10 +60,19 @@ class ContactsModel @Inject constructor(
                     )
                 },
                 onFailure = { e ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = e.message ?: "Failed to load contacts",
-                    )
+                    val cached = withContext(Dispatchers.IO) { dao.getAll() }
+                    if (cached.isNotEmpty()) {
+                        _state.value = ContactsState(
+                            contacts = cached.map {
+                                ContactInfo(userId = it.userId, fullName = it.name ?: "", phone = it.phone)
+                            },
+                        )
+                    } else {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            error = e.message ?: "Failed to load contacts",
+                        )
+                    }
                 },
             )
         }
@@ -102,7 +118,6 @@ class ContactsModel @Inject constructor(
 
                         if ("*" in phone || "#" in phone) continue
 
-                        // обработка "тупых" номеров
                         if (phone.startsWith("8")) {
                             phone.subSequence(1, phone.length)
                             phone = "+7$phone"

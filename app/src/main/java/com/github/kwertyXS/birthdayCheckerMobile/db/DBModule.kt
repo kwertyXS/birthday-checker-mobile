@@ -16,7 +16,9 @@ object DBModule {
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext ctx: Context): MainDB =
-        Room.databaseBuilder(ctx, MainDB::class.java, "main.db").build()
+        Room.databaseBuilder(ctx, MainDB::class.java, "main.db")
+            .fallbackToDestructiveMigration(false)
+            .build()
 
     @Provides
     fun provideDao(db: MainDB): Dao = db.dao
