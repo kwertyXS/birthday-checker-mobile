@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,20 +77,20 @@ fun ContactsWindow(model: ContactsModel? = null) {
     if (showSyncDialog) {
         AlertDialog(
             onDismissRequest = { showSyncDialog = false },
-            containerColor = CardWhite,
+            containerColor = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(16.dp),
             title = {
                 Text(
                     stringResource(R.string.contacts_sync_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_sync_dialog_message),
-                    color = TextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
             confirmButton = {
@@ -98,15 +99,15 @@ fun ContactsWindow(model: ContactsModel? = null) {
                         showSyncDialog = false
                         model?.syncContacts()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(12.dp),
                 ) {
-                    Text(stringResource(R.string.contacts_sync_confirm), color = CardWhite)
+                    Text(stringResource(R.string.contacts_sync_confirm), color = MaterialTheme.colorScheme.onPrimary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showSyncDialog = false }) {
-                    Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
+                    Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
         )
@@ -115,20 +116,20 @@ fun ContactsWindow(model: ContactsModel? = null) {
     contactToDelete?.let { contact ->
         AlertDialog(
             onDismissRequest = { contactToDelete = null },
-            containerColor = CardWhite,
+            containerColor = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(16.dp),
             title = {
                 Text(
                     stringResource(R.string.contacts_delete_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_delete_dialog_message, contact.fullName),
-                    color = TextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
             confirmButton = {
@@ -137,15 +138,15 @@ fun ContactsWindow(model: ContactsModel? = null) {
                         model?.deleteContact(contact.userId)
                         contactToDelete = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(12.dp),
                 ) {
-                    Text(stringResource(R.string.contacts_delete_confirm), color = CardWhite)
+                    Text(stringResource(R.string.contacts_delete_confirm), color = MaterialTheme.colorScheme.onPrimary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { contactToDelete = null }) {
-                    Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
+                    Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
         )
@@ -247,6 +248,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     painter = painterResource(R.drawable.ic_add),
                     contentDescription = stringResource(R.string.contacts_add_content_description),
                     modifier = Modifier.size(26.dp),
+                    tint = Color(0xFFFFFFFF)
                 )
             }
 
@@ -279,14 +281,14 @@ private fun AddContactDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = CardWhite,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
                 stringResource(R.string.contacts_dialog_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = TextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         },
         text = {
@@ -314,15 +316,15 @@ private fun AddContactDialog(
             Button(
                 onClick = { onConfirm(name, phone) },
                 enabled = name.isNotBlank() && phone.isNotBlank(),
-                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text(stringResource(R.string.contacts_add_button), color = CardWhite)
+                Text(stringResource(R.string.contacts_add_button), color = MaterialTheme.colorScheme.onPrimary)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
+                Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
     )
