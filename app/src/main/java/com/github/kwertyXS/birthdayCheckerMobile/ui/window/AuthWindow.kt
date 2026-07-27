@@ -100,6 +100,8 @@ fun PhoneEntryWindow(model: AuthModel) {
                     shape = RoundedCornerShape(12.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
@@ -127,6 +129,8 @@ fun PhoneEntryWindow(model: AuthModel) {
                     colors = ButtonDefaults.buttonColors(
                         containerColor = OrangeAccent,
                         contentColor = CardWhite,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
                     ),
                     enabled = state.phone.length >= 10 && !state.isLoading,
                 ) {
@@ -189,6 +193,8 @@ fun VerifyCodeWindow(
                     shape = RoundedCornerShape(12.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
@@ -216,6 +222,8 @@ fun VerifyCodeWindow(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = OrangeAccent,
                         contentColor = CardWhite,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
                     ),
                     enabled = state.verificationCode.length == 6 && !state.isLoading,
                 ) {
@@ -308,6 +316,8 @@ fun BirthdayWindow(
                         }
                     },
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
@@ -326,6 +336,8 @@ fun BirthdayWindow(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = OrangeAccent,
                         contentColor = CardWhite,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
                     ),
                     enabled = state.birthday.isNotEmpty(),
                 ) {

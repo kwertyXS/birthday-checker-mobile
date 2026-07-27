@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +50,7 @@ import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BrownText
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
+import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.InputBorder
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeLight
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.TextPrimary
@@ -187,6 +190,7 @@ private fun SettingsRow(label: String, value: String, onEdit: (() -> Unit)? = nu
                     painter = painterResource(R.drawable.ic_edit),
                     contentDescription = stringResource(R.string.settings_edit_content_description),
                     modifier = Modifier.size(20.dp),
+                    tint = Color.Black
                 )
             }
         }
@@ -211,7 +215,7 @@ private fun EditFieldDialog(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = TextPrimary,
             )
         },
         text = {
@@ -221,6 +225,15 @@ private fun EditFieldDialog(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary,
+                    focusedLabelColor = TextSecondary,
+                    unfocusedLabelColor = TextSecondary,
+                    cursorColor = OrangeAccent,
+                    focusedBorderColor = OrangeAccent,
+                    unfocusedBorderColor = InputBorder,
+                ),
             )
         },
         confirmButton = {
@@ -231,7 +244,7 @@ private fun EditFieldDialog(
             ) {
                 Text(
                     stringResource(R.string.settings_edit_save),
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                 )
             }
         },

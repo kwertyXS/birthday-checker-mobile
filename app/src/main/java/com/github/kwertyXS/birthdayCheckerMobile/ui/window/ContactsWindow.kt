@@ -84,13 +84,13 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     stringResource(R.string.contacts_sync_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.Black,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_sync_dialog_message),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = Color.Black,
                 )
             },
             confirmButton = {
@@ -99,10 +99,14 @@ fun ContactsWindow(model: ContactsModel? = null) {
                         showSyncDialog = false
                         model?.syncContacts()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = OrangeAccent,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
+                    ),
                     shape = RoundedCornerShape(12.dp),
                 ) {
-                    Text(stringResource(R.string.contacts_sync_confirm), color = MaterialTheme.colorScheme.onPrimary)
+                    Text(stringResource(R.string.contacts_sync_confirm), color = CardWhite)
                 }
             },
             dismissButton = {
@@ -138,10 +142,14 @@ fun ContactsWindow(model: ContactsModel? = null) {
                         model?.deleteContact(contact.userId)
                         contactToDelete = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = OrangeAccent,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
+                    ),
                     shape = RoundedCornerShape(12.dp),
                 ) {
-                    Text(stringResource(R.string.contacts_delete_confirm), color = MaterialTheme.colorScheme.onPrimary)
+                    Text(stringResource(R.string.contacts_delete_confirm), color = CardWhite)
                 }
             },
             dismissButton = {
@@ -248,7 +256,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     painter = painterResource(R.drawable.ic_add),
                     contentDescription = stringResource(R.string.contacts_add_content_description),
                     modifier = Modifier.size(26.dp),
-                    tint = Color(0xFFFFFFFF)
+                    tint = Color(0xFFFFFFFF),
                 )
             }
 
@@ -265,6 +273,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     painter = painterResource(R.drawable.ic_sync),
                     contentDescription = stringResource(R.string.contacts_sync_content_description),
                     modifier = Modifier.size(26.dp),
+                    tint = Color(0xFFFFFFFF),
                 )
             }
         }
@@ -288,7 +297,7 @@ private fun AddContactDialog(
                 stringResource(R.string.contacts_dialog_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color.Black,
             )
         },
         text = {
@@ -316,10 +325,14 @@ private fun AddContactDialog(
             Button(
                 onClick = { onConfirm(name, phone) },
                 enabled = name.isNotBlank() && phone.isNotBlank(),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(
+                        containerColor = OrangeAccent,
+                        disabledContainerColor = OrangeAccent.copy(alpha = 0.5f),
+                        disabledContentColor = CardWhite.copy(alpha = 0.7f),
+                    ),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text(stringResource(R.string.contacts_add_button), color = MaterialTheme.colorScheme.onPrimary)
+                Text(stringResource(R.string.contacts_add_button), color = Color.White)
             }
         },
         dismissButton = {
