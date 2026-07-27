@@ -2,6 +2,7 @@ package com.github.kwertyXS.birthdayCheckerMobile.models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kwertyXS.birthdayCheckerMobile.api.UserEditRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +44,22 @@ class SettingsModel @Inject constructor(
                     _state.value = _state.value.copy(
                         isLoading = false,
                         error = e.message ?: "Failed to load user",
+                    )
+                },
+            )
+        }
+    }
+
+    fun updateBirthday(newBirthday: String) {
+        _state.value = _state.value.copy(error = "")
+        viewModelScope.launch {
+            repository.editUser(UserEditRequest(birthday = newBirthday)).fold(
+                onSuccess = {
+                    _state.value = _state.value.copy(birthday = newBirthday)
+                },
+                onFailure = { e ->
+                    _state.value = _state.value.copy(
+                        error = e.message ?: "Failed to update birthday",
                     )
                 },
             )

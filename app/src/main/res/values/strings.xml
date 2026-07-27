@@ -54,6 +54,10 @@
     <string name="settings_phone">Phone</string>
     <string name="settings_birthday">Date of Birth</string>
     <string name="settings_logout">Logout</string>
+    <string name="settings_edit_birthday_title">Change date of birth</string>
+    <string name="settings_edit_save">Save</string>
+    <string name="settings_edit_cancel">Cancel</string>
+    <string name="settings_edit_content_description">Edit</string>
 
     <!-- Delete -->
     <string name="contacts_delete_content_description">Delete contact</string>

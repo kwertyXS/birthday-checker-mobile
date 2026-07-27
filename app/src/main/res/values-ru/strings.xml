@@ -54,6 +54,10 @@
     <string name="settings_phone">Телефон</string>
     <string name="settings_birthday">Дата рождения</string>
     <string name="settings_logout">Выйти</string>
+    <string name="settings_edit_birthday_title">Изменить дату рождения</string>
+    <string name="settings_edit_save">Сохранить</string>
+    <string name="settings_edit_cancel">Отмена</string>
+    <string name="settings_edit_content_description">Изменить</string>
 
     <!-- Delete -->
     <string name="contacts_delete_content_description">Удалить контакт</string>
