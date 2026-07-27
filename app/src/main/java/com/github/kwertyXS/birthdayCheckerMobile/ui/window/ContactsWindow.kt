@@ -1,6 +1,12 @@
 package com.github.kwertyXS.birthdayCheckerMobile.ui.window
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,6 +79,14 @@ fun ContactsWindow(model: ContactsModel? = null) {
     var showDialog by remember { mutableStateOf(false) }
     var showSyncDialog by remember { mutableStateOf(false) }
     var contactToDelete by remember { mutableStateOf<ContactInfo?>(null) }
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        if (granted) {
+            model?.syncContacts()
+        }
+    }
 
     if (showSyncDialog) {
         AlertDialog(
@@ -97,7 +111,11 @@ fun ContactsWindow(model: ContactsModel? = null) {
                 Button(
                     onClick = {
                         showSyncDialog = false
-                        model?.syncContacts()
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                            model?.syncContacts()
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = OrangeAccent,
