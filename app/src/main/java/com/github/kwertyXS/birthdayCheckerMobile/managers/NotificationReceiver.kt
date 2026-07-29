@@ -16,6 +16,9 @@ class NotificationReceiver : BroadcastReceiver() {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun onReceive(context: Context, intent: Intent) {
+        val prefs = context.getSharedPreferences("Notification", Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("enable", true)) return
+
         val date = intent.getStringExtra("date") ?: return
         val who = intent.getStringExtra("who") ?: return
         val number = intent.getStringExtra("number") ?: return

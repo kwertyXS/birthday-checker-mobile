@@ -48,6 +48,18 @@ class AppNotificationManager @Inject constructor(
         sharedPreferences.edit().putInt("minute", minute).apply()
     }
 
+    fun cancelNotification(who: String, number: String) {
+        val intent = Intent(application, NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            application,
+            "${who}_$number".hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val alarmManager = getSystemService(application, AlarmManager::class.java)
+        alarmManager?.cancel(pendingIntent)
+    }
+
     fun addNotification2Queue(date: String, who: String, number: String) {
         if (!getData()) return
         val parts = date.split("-")

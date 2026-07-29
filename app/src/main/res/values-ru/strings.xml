@@ -81,4 +81,8 @@
     <string name="settings_notifications_birthdays">Дни рождения</string>
     <string name="settings_notifications_enabled">Включены</string>
     <string name="settings_notifications_disabled">Отключены</string>
+
+    <!-- Notification Permission -->
+    <string name="notification_permission_title">Уведомления о днях рождения</string>
+    <string name="notification_permission_description">Разрешите приложению уведомлять вас о предстоящих днях рождения ваших контактов</string>
 </resources>

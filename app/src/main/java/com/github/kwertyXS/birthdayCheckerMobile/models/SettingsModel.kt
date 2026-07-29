@@ -66,6 +66,18 @@ class SettingsModel @Inject constructor(
         val newValue = !_state.value.notificationsEnabled
         notificationManager.setData(newValue)
         _state.value = _state.value.copy(notificationsEnabled = newValue)
+        viewModelScope.launch {
+            val contacts = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { dao.getAll() }
+            contacts.forEach { contact ->
+                if (contact.birthday != null) {
+                    if (newValue) {
+                        notificationManager.addNotification2Queue(contact.birthday, contact.name ?: "", contact.phone)
+                    } else {
+                        notificationManager.cancelNotification(contact.name ?: "", contact.phone)
+                    }
+                }
+            }
+        }
     }
 
     fun updateNotificationTime(hour: Int, minute: Int) {

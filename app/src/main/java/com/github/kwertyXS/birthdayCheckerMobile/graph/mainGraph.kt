@@ -19,7 +19,7 @@ import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
-import com.github.kwertyXS.birthdayCheckerMobile.ui.window.NotificationOnboardingWindow
+import com.github.kwertyXS.birthdayCheckerMobile.ui.window.NotificationPermissionWindow
 
 @Composable
 fun MainGraph() {
@@ -42,7 +42,7 @@ fun MainGraph() {
             var onboardingDone by remember { mutableStateOf(onboardingManager.isCompleted()) }
 
             if (!onboardingDone) {
-                NotificationOnboardingWindow(
+                NotificationPermissionWindow(
                     onEnable = {
                         AppNotificationManager(
                             context.applicationContext as Application,

@@ -81,4 +81,8 @@
     <string name="settings_notifications_birthdays">Birthdays</string>
     <string name="settings_notifications_enabled">Enabled</string>
     <string name="settings_notifications_disabled">Disabled</string>
+
+    <!-- Notification Permission -->
+    <string name="notification_permission_title">Birthday Notifications</string>
+    <string name="notification_permission_description">Allow the app to notify you about upcoming birthdays of your contacts</string>
 </resources>
