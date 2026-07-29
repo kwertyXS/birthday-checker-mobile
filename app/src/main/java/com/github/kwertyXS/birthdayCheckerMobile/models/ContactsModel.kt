@@ -11,6 +11,7 @@ import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import com.github.kwertyXS.birthdayCheckerMobile.db.ContactEntity
 import com.github.kwertyXS.birthdayCheckerMobile.db.Dao
 import com.github.kwertyXS.birthdayCheckerMobile.db.toEntity
+import com.github.kwertyXS.birthdayCheckerMobile.managers.AppNotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,7 @@ class ContactsModel @Inject constructor(
     private val repository: Repository,
     private val application: Application,
     private val dao: Dao,
+    private val notificationManager: AppNotificationManager,
 ) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(ContactsState())
     val state: StateFlow<ContactsState> = _state.asStateFlow()
@@ -53,6 +55,11 @@ class ContactsModel @Inject constructor(
                     withContext(Dispatchers.IO) {
                         dao.deleteAll()
                         dao.insertAll(contacts.map { it.toEntity() })
+                    }
+                    contacts.forEach { contact ->
+                        if (contact.birthday != null) {
+                            notificationManager.addNotification2Queue(contact.birthday, contact.name ?: "", contact.phone)
+                        }
                     }
                     _state.value = ContactsState(
                         contacts = contacts.map {

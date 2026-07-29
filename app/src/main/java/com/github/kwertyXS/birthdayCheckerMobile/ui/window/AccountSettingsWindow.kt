@@ -39,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,6 +65,7 @@ fun AccountSettingsWindow(
 ) {
     val state = model?.state?.collectAsState()?.value
     var showBirthdayDialog by remember { mutableStateOf(false) }
+    var showTimeDialog by remember { mutableStateOf(false) }
 
     val pullRefreshState = rememberPullToRefreshState()
 
@@ -76,6 +78,18 @@ fun AccountSettingsWindow(
                 showBirthdayDialog = false
             },
             onDismiss = { showBirthdayDialog = false },
+        )
+    }
+
+    if (showTimeDialog) {
+        TimeEditDialog(
+            hour = state?.notificationHour ?: 17,
+            minute = state?.notificationMinute ?: 0,
+            onSave = { h, m ->
+                model?.updateNotificationTime(h, m)
+                showTimeDialog = false
+            },
+            onDismiss = { showTimeDialog = false },
         )
     }
 
@@ -115,15 +129,49 @@ fun AccountSettingsWindow(
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
-                    SettingsRow(
+                    SettingsDisplayRow(
                         label = stringResource(R.string.settings_phone),
                         value = state?.phone ?: "",
                     )
                     HorizontalDivider()
-                    SettingsRow(
+                    SettingsEditRow(
                         label = stringResource(R.string.settings_birthday),
                         value = state?.birthday ?: "",
                         onEdit = { showBirthdayDialog = true },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = CardWhite),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Text(
+                        text = "Уведомления",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = TextSecondary,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                    )
+                    SettingsToggleRow(
+                        label = "Дни рождения",
+                        enabled = state?.notificationsEnabled ?: true,
+                        onToggle = { model?.toggleNotifications() },
+                    )
+                    HorizontalDivider()
+                    SettingsEditRow(
+                        label = "Время",
+                        value = String.format("%02d:%02d", state?.notificationHour ?: 17, state?.notificationMinute ?: 0),
+                        onEdit = { showTimeDialog = true },
                     )
                 }
             }
@@ -156,7 +204,31 @@ fun AccountSettingsWindow(
 }
 
 @Composable
-private fun SettingsRow(label: String, value: String, onEdit: (() -> Unit)? = null) {
+private fun SettingsDisplayRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                fontSize = 15.sp,
+                color = TextSecondary,
+            )
+            Text(
+                text = value,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextPrimary,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsEditRow(label: String, value: String, onEdit: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,22 +249,57 @@ private fun SettingsRow(label: String, value: String, onEdit: (() -> Unit)? = nu
             )
         }
 
-        if (onEdit != null) {
-            Spacer(Modifier.width(8.dp))
+        Spacer(Modifier.width(8.dp))
 
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable(onClick = onEdit),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_edit),
-                    contentDescription = stringResource(R.string.settings_edit_content_description),
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Black
-                )
-            }
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .clickable(onClick = onEdit),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_edit),
+                contentDescription = stringResource(R.string.settings_edit_content_description),
+                modifier = Modifier.size(20.dp),
+                tint = Color.Black,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsToggleRow(label: String, enabled: Boolean, onToggle: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextPrimary,
+            )
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(if (enabled) Color(0x3300FF00) else Color(0x33FF0000))
+                .clickable(onClick = onToggle),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(if (enabled) R.drawable.ic_check else R.drawable.ic_close),
+                contentDescription = if (enabled) "Включено" else "Выключено",
+                tint = if (enabled) Color(0xFF00FF00) else Color(0xFFFF0000),
+                modifier = Modifier.size(20.dp),
+            )
         }
     }
 }
@@ -246,6 +353,94 @@ private fun EditFieldDialog(
                     stringResource(R.string.settings_edit_save),
                     color = Color.White,
                 )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    stringResource(R.string.settings_edit_cancel),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+    )
+}
+
+@Composable
+private fun TimeEditDialog(
+    hour: Int,
+    minute: Int,
+    onSave: (Int, Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var h by remember { mutableStateOf(hour.toString()) }
+    var m by remember { mutableStateOf(String.format("%02d", minute)) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(16.dp),
+        title = {
+            Text(
+                text = "Время уведомления",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = TextPrimary,
+            )
+        },
+        text = {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                OutlinedTextField(
+                    value = h,
+                    onValueChange = { h = it.filter { c -> c.isDigit() }.take(2) },
+                    label = { Text("Час") },
+                    singleLine = true,
+                    modifier = Modifier.width(80.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        focusedLabelColor = TextSecondary,
+                        unfocusedLabelColor = TextSecondary,
+                        cursorColor = OrangeAccent,
+                        focusedBorderColor = OrangeAccent,
+                        unfocusedBorderColor = InputBorder,
+                    ),
+                )
+                Text(":", fontSize = 20.sp, color = TextPrimary)
+                OutlinedTextField(
+                    value = m,
+                    onValueChange = { m = it.filter { c -> c.isDigit() }.take(2) },
+                    label = { Text("Мин") },
+                    singleLine = true,
+                    modifier = Modifier.width(80.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        focusedLabelColor = TextSecondary,
+                        unfocusedLabelColor = TextSecondary,
+                        cursorColor = OrangeAccent,
+                        focusedBorderColor = OrangeAccent,
+                        unfocusedBorderColor = InputBorder,
+                    ),
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    val hour = h.toIntOrNull()?.coerceIn(0, 23) ?: 17
+                    val min = m.toIntOrNull()?.coerceIn(0, 59) ?: 0
+                    onSave(hour, min)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(stringResource(R.string.settings_edit_save), color = Color.White)
             }
         },
         dismissButton = {

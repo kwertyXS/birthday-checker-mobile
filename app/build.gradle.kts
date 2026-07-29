@@ -119,6 +119,9 @@ dependencies {
     // 7. шифрование ключей
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
+    // 8. WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+
 
 
     // Тесты

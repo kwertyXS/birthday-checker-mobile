@@ -73,4 +73,12 @@
     <string name="birthdays_yesterday">Yesterday</string>
     <string name="birthdays_today">Today</string>
     <string name="birthdays_tomorrow">Tomorrow</string>
+
+    <!-- Notifications -->
+    <string name="near_birthday">Birthday coming soon</string>
+    <string name="today_birthday">Today is the birthday of </string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_birthdays">Birthdays</string>
+    <string name="settings_notifications_enabled">Enabled</string>
+    <string name="settings_notifications_disabled">Disabled</string>
 </resources>
