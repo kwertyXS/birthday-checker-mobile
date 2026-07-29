@@ -43,10 +43,6 @@ class ContactsModel @Inject constructor(
     private val _state = MutableStateFlow(ContactsState())
     val state: StateFlow<ContactsState> = _state.asStateFlow()
 
-    init {
-        loadContacts()
-    }
-
     fun loadContacts() {
         _state.value = _state.value.copy(isLoading = true, error = "")
         viewModelScope.launch {

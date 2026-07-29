@@ -33,6 +33,7 @@ class AuthModel @Inject constructor(
                 _state.update { it.copy(isLoading = true, error = "") }
                 viewModelScope.launch {
                     val result = repository.login(phone)
+
                     result.fold(
                         onSuccess = {
                             _state.update { it.copy(isLoading = false, isNewUser = false, phoneSubmitted = true) }

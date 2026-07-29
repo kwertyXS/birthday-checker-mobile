@@ -40,6 +40,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -86,6 +87,10 @@ fun ContactsWindow(model: ContactsModel? = null) {
         if (granted) {
             model?.syncContacts()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        model?.loadContacts()
     }
 
     if (showSyncDialog) {

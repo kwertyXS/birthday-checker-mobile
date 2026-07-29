@@ -80,7 +80,6 @@ fun MainScaffold(
     val now = remember { Date() }
     val dayOfWeek = remember { SimpleDateFormat("EEEE", Locale.getDefault()).format(now) }
     val dateStr = remember { SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).format(now) }
-
     Box(Modifier.fillMaxSize().background(BeigeBackground)) {
     Scaffold(
         topBar = {
