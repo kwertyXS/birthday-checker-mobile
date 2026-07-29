@@ -6,6 +6,8 @@ import com.github.kwertyXS.birthdayCheckerMobile.api.AccessTokenResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.AddContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.ContactResponse
+import com.github.kwertyXS.birthdayCheckerMobile.api.DeleteContactRequest
+import com.github.kwertyXS.birthdayCheckerMobile.api.DeleteContactResult
 import com.github.kwertyXS.birthdayCheckerMobile.api.RefreshTokenResponse
 import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
 import com.github.kwertyXS.birthdayCheckerMobile.api.UserEditRequest
@@ -96,7 +98,9 @@ class FakeRepositoryImpl @Inject constructor() : Repository {
         )
     }
 
-    override suspend fun deleteContact(contactId: Int): Result<Unit> {
-        return Result.success(Unit)
+    override suspend fun deleteContacts(contacts: List<DeleteContactRequest>): Result<List<DeleteContactResult>> {
+        return Result.success(contacts.map {
+            DeleteContactResult(status = "ok", contact = it.contactId)
+        })
     }
 }

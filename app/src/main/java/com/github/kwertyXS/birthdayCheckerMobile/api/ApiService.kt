@@ -3,9 +3,11 @@ package com.github.kwertyXS.birthdayCheckerMobile.api
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface ApiService {
     @POST("/api/v1/registration")
@@ -29,6 +31,6 @@ interface ApiService {
     @GET("/api/v1/contacts")
     suspend fun getContacts(): List<ContactResponse>
 
-    @DELETE("/api/v1/contacts")
-    suspend fun deleteContact(@Query("contact_id") contactId: Int): Unit
+    @HTTP(method = "DELETE", hasBody = true, path = "/api/v1/contacts")
+    suspend fun deleteContact(@Body body: List<DeleteContactRequest>): List<DeleteContactResult>
 }
