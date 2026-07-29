@@ -1,24 +1,25 @@
 package com.github.kwertyXS.birthdayCheckerMobile.graph
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Application
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.kwertyXS.birthdayCheckerMobile.MainScaffold
+import com.github.kwertyXS.birthdayCheckerMobile.managers.AppNotificationManager
+import com.github.kwertyXS.birthdayCheckerMobile.managers.NotificationOnboardingManager
 import com.github.kwertyXS.birthdayCheckerMobile.models.AuthModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
+import com.github.kwertyXS.birthdayCheckerMobile.ui.window.NotificationOnboardingWindow
 
 @Composable
 fun MainGraph() {
@@ -29,16 +30,6 @@ fun MainGraph() {
     val settingsModel: SettingsModel = hiltViewModel()
     val startDestination = remember { if (authModel.isLoggedIn()) "main" else "auth" }
 
-    val context = LocalContext.current
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-    ) { _ -> }
-    LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }
-
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -46,17 +37,38 @@ fun MainGraph() {
         authGraph(authModel, navController)
 
         composable(route = "main") {
-            MainScaffold(
-                contactsModel = contactsModel,
-                birthdaysModel = birthdaysModel,
-                settingsModel = settingsModel,
-                onLogout = {
-                    authModel.onEvent(AuthEvent.Logout)
-                    navController.navigate("auth") {
-                        popUpTo("main") { inclusive = true }
-                    }
-                },
-            )
+            val context = LocalContext.current
+            val onboardingManager = remember { NotificationOnboardingManager(context) }
+            var onboardingDone by remember { mutableStateOf(onboardingManager.isCompleted()) }
+
+            if (!onboardingDone) {
+                NotificationOnboardingWindow(
+                    onEnable = {
+                        AppNotificationManager(
+                            context.applicationContext as Application,
+                            context.applicationContext,
+                        ).setData(true)
+                        onboardingManager.setCompleted()
+                        onboardingDone = true
+                    },
+                    onSkip = {
+                        onboardingManager.setCompleted()
+                        onboardingDone = true
+                    },
+                )
+            } else {
+                MainScaffold(
+                    contactsModel = contactsModel,
+                    birthdaysModel = birthdaysModel,
+                    settingsModel = settingsModel,
+                    onLogout = {
+                        authModel.onEvent(AuthEvent.Logout)
+                        navController.navigate("auth") {
+                            popUpTo("main") { inclusive = true }
+                        }
+                    },
+                )
+            }
         }
     }
 }
