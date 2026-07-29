@@ -1,24 +1,31 @@
 package com.github.kwertyXS.birthdayCheckerMobile.graph
 
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.kwertyXS.birthdayCheckerMobile.MainScaffold
 import com.github.kwertyXS.birthdayCheckerMobile.managers.AppNotificationManager
+import com.github.kwertyXS.birthdayCheckerMobile.managers.ContactsPermissionManager
 import com.github.kwertyXS.birthdayCheckerMobile.managers.NotificationOnboardingManager
 import com.github.kwertyXS.birthdayCheckerMobile.models.AuthModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.BirthdaysModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.ContactsModel
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.state.AuthEvent
+import com.github.kwertyXS.birthdayCheckerMobile.ui.window.ContactsPermissionWindow
 import com.github.kwertyXS.birthdayCheckerMobile.ui.window.NotificationPermissionWindow
 
 @Composable
@@ -38,22 +45,50 @@ fun MainGraph() {
 
         composable(route = "main") {
             val context = LocalContext.current
-            val onboardingManager = remember { NotificationOnboardingManager(context) }
-            var onboardingDone by remember { mutableStateOf(onboardingManager.isCompleted()) }
+            val notificationOnboardingManager = remember { NotificationOnboardingManager(context) }
+            var notificationDone by remember { mutableStateOf(notificationOnboardingManager.isCompleted()) }
+            val contactsPermissionManager = remember { ContactsPermissionManager(context) }
+            var contactsDone by remember { mutableStateOf(contactsPermissionManager.isCompleted()) }
 
-            if (!onboardingDone) {
+            val contactsPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission(),
+            ) { granted ->
+                if (granted) {
+                    contactsModel.syncContacts()
+                }
+                contactsPermissionManager.setCompleted()
+                contactsDone = true
+            }
+
+            if (!notificationDone) {
                 NotificationPermissionWindow(
                     onEnable = {
                         AppNotificationManager(
                             context.applicationContext as Application,
                             context.applicationContext,
                         ).setData(true)
-                        onboardingManager.setCompleted()
-                        onboardingDone = true
+                        notificationOnboardingManager.setCompleted()
+                        notificationDone = true
                     },
                     onSkip = {
-                        onboardingManager.setCompleted()
-                        onboardingDone = true
+                        notificationOnboardingManager.setCompleted()
+                        notificationDone = true
+                    },
+                )
+            } else if (!contactsDone) {
+                ContactsPermissionWindow(
+                    onAllow = {
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                            contactsModel.syncContacts()
+                            contactsPermissionManager.setCompleted()
+                            contactsDone = true
+                        } else {
+                            contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+                        }
+                    },
+                    onDeny = {
+                        contactsPermissionManager.setCompleted()
+                        contactsDone = true
                     },
                 )
             } else {
