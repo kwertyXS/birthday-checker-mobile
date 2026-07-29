@@ -47,6 +47,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.models.SettingsModel
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
@@ -69,6 +79,24 @@ fun AccountSettingsWindow(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val pullRefreshState = rememberPullToRefreshState()
+
+    val context = LocalContext.current
+    val permissionHandler = rememberNotificationPermissionHandler(
+        context = context,
+        onPermissionGranted = { model?.toggleNotifications() },
+    )
+
+    if (permissionHandler.showSettingsDialog) {
+        PermissionSettingsDialog(
+            onDismiss = permissionHandler.dismissSettingsDialog,
+            onOpenSettings = {
+                permissionHandler.dismissSettingsDialog()
+                context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                })
+            },
+        )
+    }
 
     LaunchedEffect(Unit) {
         model?.loadUser()
@@ -170,7 +198,15 @@ fun AccountSettingsWindow(
                     SettingsToggleRow(
                         label = "Дни рождения",
                         enabled = state?.notificationsEnabled ?: true,
-                        onToggle = { model?.toggleNotifications() },
+                        onToggle = {
+                            if (state?.notificationsEnabled == true) {
+                                model?.toggleNotifications()
+                            } else if (permissionHandler.hasPermission) {
+                                model?.toggleNotifications()
+                            } else {
+                                permissionHandler.requestPermission()
+                            }
+                        },
                     )
                     HorizontalDivider()
                     SettingsEditRow(
@@ -466,5 +502,84 @@ private fun HorizontalDivider() {
             .fillMaxWidth()
             .height(1.dp)
             .background(BeigeBackground)
+    )
+}
+
+private data class PermissionHandlerState(
+    val hasPermission: Boolean,
+    val showSettingsDialog: Boolean,
+    val dismissSettingsDialog: () -> Unit,
+    val requestPermission: () -> Unit,
+)
+
+@Composable
+private fun rememberNotificationPermissionHandler(
+    context: android.content.Context,
+    onPermissionGranted: () -> Unit,
+): PermissionHandlerState {
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+    val hasPermission = ContextCompat.checkSelfPermission(
+        context, Manifest.permission.POST_NOTIFICATIONS
+    ) == PackageManager.PERMISSION_GRANTED
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        if (granted) {
+            onPermissionGranted()
+        } else {
+            val activity = context as? Activity
+            if (activity != null && !activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                showSettingsDialog = true
+            }
+        }
+    }
+
+    return PermissionHandlerState(
+        hasPermission = hasPermission,
+        showSettingsDialog = showSettingsDialog,
+        dismissSettingsDialog = { showSettingsDialog = false },
+        requestPermission = { launcher.launch(Manifest.permission.POST_NOTIFICATIONS) },
+    )
+}
+
+@Composable
+private fun PermissionSettingsDialog(
+    onDismiss: () -> Unit,
+    onOpenSettings: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(16.dp),
+        title = {
+            Text(
+                text = "Разрешение на уведомления",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = TextPrimary,
+            )
+        },
+        text = {
+            Text(
+                text = "Разрешение на уведомления было отклонено. Пожалуйста, включите его в настройках приложения.",
+                color = TextPrimary,
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onOpenSettings,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text("Открыть настройки", color = Color.White)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Отмена", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        },
     )
 }
