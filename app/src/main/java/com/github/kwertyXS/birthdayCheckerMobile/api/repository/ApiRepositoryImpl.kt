@@ -25,12 +25,8 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun login(phone: String): Result<RefreshTokenResponse> = runCatching {
         val response = api.login(LoginRequest(phone))
         tokenManager.saveRefreshToken(response.refreshToken)
-        if (response.accessToken != null) {
-            tokenManager.saveAccessToken(response.accessToken)
-        } else {
-            val access = api.refreshToken(response.refreshToken)
-            tokenManager.saveAccessToken(access.accessToken)
-        }
+        val access = api.refreshToken(response.refreshToken)
+        tokenManager.saveAccessToken(access.accessToken)
         response
     }
 

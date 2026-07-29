@@ -42,10 +42,6 @@ class BirthdaysModel @Inject constructor(
     private val _state = MutableStateFlow(BirthdaysState())
     val state: StateFlow<BirthdaysState> = _state.asStateFlow()
 
-    init {
-        loadBirthdays()
-    }
-
     fun selectTab(index: Int) {
         _state.value = _state.value.copy(selectedTab = index)
     }
