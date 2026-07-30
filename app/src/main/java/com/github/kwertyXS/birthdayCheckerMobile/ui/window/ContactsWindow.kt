@@ -45,7 +45,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,20 +95,20 @@ fun ContactsWindow(model: ContactsModel? = null) {
     if (showSyncDialog) {
         AlertDialog(
             onDismissRequest = { showSyncDialog = false },
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = CardWhite,
             shape = RoundedCornerShape(16.dp),
             title = {
                 Text(
                     stringResource(R.string.contacts_sync_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = TextPrimary,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_sync_dialog_message),
-                    color = Color.Black,
+                    color = TextPrimary,
                 )
             },
             confirmButton = {
@@ -134,7 +133,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             },
             dismissButton = {
                 TextButton(onClick = { showSyncDialog = false }) {
-                    Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
                 }
             },
         )
@@ -143,20 +142,20 @@ fun ContactsWindow(model: ContactsModel? = null) {
     contactToDelete?.let { contact ->
         AlertDialog(
             onDismissRequest = { contactToDelete = null },
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = CardWhite,
             shape = RoundedCornerShape(16.dp),
             title = {
                 Text(
                     stringResource(R.string.contacts_delete_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = TextPrimary,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_delete_dialog_message, contact.fullName),
-                    color = Color.Black,
+                    color = TextPrimary,
                 )
             },
             confirmButton = {
@@ -177,7 +176,7 @@ fun ContactsWindow(model: ContactsModel? = null) {
             },
             dismissButton = {
                 TextButton(onClick = { contactToDelete = null }) {
-                    Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
                 }
             },
         )
@@ -313,14 +312,14 @@ private fun AddContactDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = CardWhite,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
                 stringResource(R.string.contacts_dialog_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = Color.Black,
+                color = TextPrimary,
             )
         },
         text = {
@@ -328,7 +327,7 @@ private fun AddContactDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.contacts_name_label)) },
+                    label = { Text(stringResource(R.string.contacts_name_label), color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -337,7 +336,7 @@ private fun AddContactDialog(
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
-                    label = { Text(stringResource(R.string.contacts_phone_label)) },
+                    label = { Text(stringResource(R.string.contacts_phone_label), color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -355,12 +354,12 @@ private fun AddContactDialog(
                     ),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text(stringResource(R.string.contacts_add_button), color = Color.White)
+                Text(stringResource(R.string.contacts_add_button), color = CardWhite)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.contacts_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.contacts_cancel), color = TextSecondary)
             }
         },
     )

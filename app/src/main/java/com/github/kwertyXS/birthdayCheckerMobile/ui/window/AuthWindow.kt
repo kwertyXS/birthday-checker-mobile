@@ -94,7 +94,7 @@ fun PhoneEntryWindow(model: AuthModel) {
                 OutlinedTextField(
                     value = state.phone,
                     onValueChange = { model.onEvent(AuthEvent.PhoneChanged(it)) },
-                    label = { Text(stringResource(R.string.auth_phone_label)) },
+                    label = { Text(stringResource(R.string.auth_phone_label), color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -105,7 +105,8 @@ fun PhoneEntryWindow(model: AuthModel) {
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
-                        focusedLabelColor = OrangeAccent,
+                        focusedLabelColor = TextPrimary,
+                        unfocusedLabelColor = TextPrimary,
                     ),
                 )
 
@@ -187,7 +188,7 @@ fun VerifyCodeWindow(
                 OutlinedTextField(
                     value = state.verificationCode,
                     onValueChange = { if (it.length <= 6) model.onEvent(AuthEvent.CodeChanged(it)) },
-                    label = { Text(stringResource(R.string.auth_code_label)) },
+                    label = { Text(stringResource(R.string.auth_code_label), color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -198,7 +199,8 @@ fun VerifyCodeWindow(
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
-                        focusedLabelColor = OrangeAccent,
+                        focusedLabelColor = TextPrimary,
+                        unfocusedLabelColor = TextPrimary,
                     ),
                 )
 
@@ -297,8 +299,8 @@ fun BirthdayWindow(
                 OutlinedTextField(
                     value = state.birthday,
                     onValueChange = {},
-                    label = { Text(stringResource(R.string.auth_birthday_label)) },
-                    placeholder = { Text(stringResource(R.string.auth_birthday_placeholder)) },
+                    label = { Text(stringResource(R.string.auth_birthday_label), color = TextPrimary) },
+                    placeholder = { Text(stringResource(R.string.auth_birthday_placeholder), color = TextPrimary) },
                     readOnly = true,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -321,7 +323,8 @@ fun BirthdayWindow(
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
                         cursorColor = OrangeAccent,
-                        focusedLabelColor = OrangeAccent,
+                        focusedLabelColor = TextPrimary,
+                        unfocusedLabelColor = TextPrimary,
                     ),
                 )
 
