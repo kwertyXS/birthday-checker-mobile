@@ -150,13 +150,13 @@ fun ContactsWindow(model: ContactsModel? = null) {
                     stringResource(R.string.contacts_delete_dialog_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.Black,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.contacts_delete_dialog_message, contact.fullName),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = Color.Black,
                 )
             },
             confirmButton = {

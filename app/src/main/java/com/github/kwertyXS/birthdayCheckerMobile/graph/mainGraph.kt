@@ -1,17 +1,12 @@
 package com.github.kwertyXS.birthdayCheckerMobile.graph
 
-import android.Manifest
 import android.app.Application
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,16 +45,6 @@ fun MainGraph() {
             val contactsPermissionManager = remember { ContactsPermissionManager(context) }
             var contactsDone by remember { mutableStateOf(contactsPermissionManager.isCompleted()) }
 
-            val contactsPermissionLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.RequestPermission(),
-            ) { granted ->
-                if (granted) {
-                    contactsModel.syncContacts()
-                }
-                contactsPermissionManager.setCompleted()
-                contactsDone = true
-            }
-
             if (!notificationDone) {
                 NotificationPermissionWindow(
                     onEnable = {
@@ -71,6 +56,10 @@ fun MainGraph() {
                         notificationDone = true
                     },
                     onSkip = {
+                        AppNotificationManager(
+                            context.applicationContext as Application,
+                            context.applicationContext,
+                        ).setData(false)
                         notificationOnboardingManager.setCompleted()
                         notificationDone = true
                     },
@@ -78,13 +67,9 @@ fun MainGraph() {
             } else if (!contactsDone) {
                 ContactsPermissionWindow(
                     onAllow = {
-                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                            contactsModel.syncContacts()
-                            contactsPermissionManager.setCompleted()
-                            contactsDone = true
-                        } else {
-                            contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
-                        }
+                        contactsModel.syncContacts()
+                        contactsPermissionManager.setCompleted()
+                        contactsDone = true
                     },
                     onDeny = {
                         contactsPermissionManager.setCompleted()

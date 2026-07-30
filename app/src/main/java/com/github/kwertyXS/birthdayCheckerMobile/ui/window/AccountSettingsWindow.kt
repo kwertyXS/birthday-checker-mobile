@@ -100,6 +100,7 @@ fun AccountSettingsWindow(
 
     LaunchedEffect(Unit) {
         model?.loadUser()
+        model?.refreshNotificationState()
     }
 
     if (showBirthdayDialog) {

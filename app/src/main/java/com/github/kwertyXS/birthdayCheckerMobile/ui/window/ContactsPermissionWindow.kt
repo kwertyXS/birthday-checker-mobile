@@ -1,7 +1,9 @@
 package com.github.kwertyXS.birthdayCheckerMobile.ui.window
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import com.github.kwertyXS.birthdayCheckerMobile.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kwertyXS.birthdayCheckerMobile.R
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.BeigeBackground
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.CardWhite
 import com.github.kwertyXS.birthdayCheckerMobile.ui.theme.OrangeAccent
@@ -43,6 +46,12 @@ fun ContactsPermissionWindow(
     onAllow: () -> Unit = {},
     onDeny: () -> Unit = {},
 ) {
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        if (granted) onAllow() else onDeny()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +106,7 @@ fun ContactsPermissionWindow(
                     Spacer(Modifier.height(32.dp))
 
                     Button(
-                        onClick = onAllow,
+                        onClick = { permissionLauncher.launch(Manifest.permission.READ_CONTACTS) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
