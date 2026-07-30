@@ -1,11 +1,13 @@
 package com.github.kwertyXS.birthdayCheckerMobile.models
 
+import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kwertyXS.birthdayCheckerMobile.api.UserEditRequest
 import com.github.kwertyXS.birthdayCheckerMobile.api.repository.Repository
-import com.github.kwertyXS.birthdayCheckerMobile.db.Dao
 import com.github.kwertyXS.birthdayCheckerMobile.managers.AppNotificationManager
+import com.github.kwertyXS.birthdayCheckerMobile.managers.NotificationScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +29,8 @@ data class SettingsState(
 class SettingsModel @Inject constructor(
     private val repository: Repository,
     private val notificationManager: AppNotificationManager,
-    private val dao: Dao,
+    private val notificationScheduler: NotificationScheduler,
+    private val application: Application,
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
     val state: StateFlow<SettingsState> = _state.asStateFlow()
@@ -38,6 +41,9 @@ class SettingsModel @Inject constructor(
             notificationHour = notificationManager.getTimeHour(),
             notificationMinute = notificationManager.getTimeMinute(),
         )
+        if (notificationManager.getData()) {
+            notificationScheduler.scheduleDailyCheck()
+        }
         loadUser()
     }
 
@@ -72,17 +78,20 @@ class SettingsModel @Inject constructor(
         val newValue = !_state.value.notificationsEnabled
         notificationManager.setData(newValue)
         _state.value = _state.value.copy(notificationsEnabled = newValue)
-        viewModelScope.launch {
-            val contacts = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { dao.getAll() }
-            contacts.forEach { contact ->
-                if (contact.birthday != null) {
-                    if (newValue) {
-                        notificationManager.addNotification2Queue(contact.birthday, contact.name ?: "", contact.phone)
-                    } else {
-                        notificationManager.cancelNotification(contact.name ?: "", contact.phone)
-                    }
-                }
-            }
+        if (newValue) {
+            notificationScheduler.scheduleDailyCheck()
+            Toast.makeText(
+                application,
+                "Уведомления включены",
+                Toast.LENGTH_SHORT,
+            ).show()
+        } else {
+            notificationScheduler.cancelDailyCheck()
+            Toast.makeText(
+                application,
+                "Уведомления выключены",
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 
@@ -90,13 +99,13 @@ class SettingsModel @Inject constructor(
         notificationManager.setTimeHour(hour)
         notificationManager.setTimeMinute(minute)
         _state.value = _state.value.copy(notificationHour = hour, notificationMinute = minute)
-        viewModelScope.launch {
-            val contacts = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { dao.getAll() }
-            contacts.forEach { contact ->
-                if (contact.birthday != null) {
-                    notificationManager.addNotification2Queue(contact.birthday, contact.name ?: "", contact.phone)
-                }
-            }
+        if (notificationManager.getData()) {
+            notificationScheduler.scheduleDailyCheck()
+            Toast.makeText(
+                application,
+                String.format("Время уведомлений: %02d:%02d", hour, minute),
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 

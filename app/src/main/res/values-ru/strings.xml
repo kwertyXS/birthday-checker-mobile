@@ -75,7 +75,7 @@
     <string name="birthdays_tomorrow">Завтра</string>
 
     <!-- Notifications -->
-    <string name="near_birthday">Скоро день рождения</string>
+    <string name="near_birthday">Сегодня день рождения</string>
     <string name="today_birthday">Сегодня день рождения у </string>
     <string name="settings_notifications">Уведомления</string>
     <string name="settings_notifications_birthdays">Дни рождения</string>
