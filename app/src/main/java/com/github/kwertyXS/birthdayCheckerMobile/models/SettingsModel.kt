@@ -62,6 +62,12 @@ class SettingsModel @Inject constructor(
         }
     }
 
+    fun refreshNotificationState() {
+        _state.value = _state.value.copy(
+            notificationsEnabled = notificationManager.getData(),
+        )
+    }
+
     fun toggleNotifications() {
         val newValue = !_state.value.notificationsEnabled
         notificationManager.setData(newValue)

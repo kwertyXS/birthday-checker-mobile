@@ -33,7 +33,7 @@ class AppNotificationManager @Inject constructor(
         manager?.createNotificationChannel(channel)
     }
 
-    fun getData(): Boolean = sharedPreferences.getBoolean("enable", true)
+    fun getData(): Boolean = sharedPreferences.getBoolean("enable", false)
     fun setData(data: Boolean) {
         sharedPreferences.edit().putBoolean("enable", data).commit()
     }
