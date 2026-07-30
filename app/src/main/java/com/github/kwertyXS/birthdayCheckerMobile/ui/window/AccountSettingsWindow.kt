@@ -23,7 +23,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -357,7 +356,7 @@ private fun EditFieldDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = CardWhite,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
@@ -388,12 +387,12 @@ private fun EditFieldDialog(
         confirmButton = {
             Button(
                 onClick = { onSave(value) },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
                 shape = RoundedCornerShape(12.dp),
             ) {
                 Text(
                     stringResource(R.string.settings_edit_save),
-                    color = Color.White,
+                    color = CardWhite,
                 )
             }
         },
@@ -401,7 +400,7 @@ private fun EditFieldDialog(
             TextButton(onClick = onDismiss) {
                 Text(
                     stringResource(R.string.settings_edit_cancel),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = TextSecondary,
                 )
             }
         },
@@ -420,7 +419,7 @@ private fun TimeEditDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = CardWhite,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
@@ -438,15 +437,15 @@ private fun TimeEditDialog(
                 OutlinedTextField(
                     value = h,
                     onValueChange = { h = it.filter { c -> c.isDigit() }.take(2) },
-                    label = { Text("Час") },
+                    label = { Text("Час", color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.width(80.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = TextPrimary,
                         unfocusedTextColor = TextPrimary,
-                        focusedLabelColor = TextSecondary,
-                        unfocusedLabelColor = TextSecondary,
+                        focusedLabelColor = TextPrimary,
+                        unfocusedLabelColor = TextPrimary,
                         cursorColor = OrangeAccent,
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
@@ -456,15 +455,15 @@ private fun TimeEditDialog(
                 OutlinedTextField(
                     value = m,
                     onValueChange = { m = it.filter { c -> c.isDigit() }.take(2) },
-                    label = { Text("Мин") },
+                    label = { Text("Мин", color = TextPrimary) },
                     singleLine = true,
                     modifier = Modifier.width(80.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = TextPrimary,
                         unfocusedTextColor = TextPrimary,
-                        focusedLabelColor = TextSecondary,
-                        unfocusedLabelColor = TextSecondary,
+                        focusedLabelColor = TextPrimary,
+                        unfocusedLabelColor = TextPrimary,
                         cursorColor = OrangeAccent,
                         focusedBorderColor = OrangeAccent,
                         unfocusedBorderColor = InputBorder,
@@ -479,17 +478,17 @@ private fun TimeEditDialog(
                     val min = m.toIntOrNull()?.coerceIn(0, 59) ?: 0
                     onSave(hour, min)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text(stringResource(R.string.settings_edit_save), color = Color.White)
+                Text(stringResource(R.string.settings_edit_save), color = CardWhite)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
                     stringResource(R.string.settings_edit_cancel),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = TextSecondary,
                 )
             }
         },
@@ -552,7 +551,7 @@ private fun PermissionSettingsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = CardWhite,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
@@ -571,15 +570,15 @@ private fun PermissionSettingsDialog(
         confirmButton = {
             Button(
                 onClick = onOpenSettings,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeAccent),
                 shape = RoundedCornerShape(12.dp),
             ) {
-                Text("Открыть настройки", color = Color.White)
+                Text("Открыть настройки", color = CardWhite)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Отмена", color = TextSecondary)
             }
         },
     )
